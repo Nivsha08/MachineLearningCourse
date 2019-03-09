@@ -5,9 +5,10 @@ np.random.seed(42)
 
 def meanNormalizeList(list):
     meanOfFeature = np.mean(list)
-    maxofFeature = np.max(list)
+    maxOfFeature = np.max(list)
     minOfFeature = np.min(list)
-    meanNormalizedFeature = lambda x: (x - meanOfFeature) / (maxofFeature - minOfFeature)
+
+    meanNormalizedFeature = lambda x: (x - meanOfFeature) / (maxOfFeature - minOfFeature)
     return [meanNormalizedFeature(value) for value in list]
 
 
@@ -28,6 +29,13 @@ def preprocess(X, y):
     y = meanNormalizeList(y)
     return X, y
 
+def calcDotProduct(X, theta):
+    dim = len(X)
+    sum = 0
+    for i in range(dim):
+        sum += (X[i] * theta[i])
+    return sum
+
 def compute_cost(X, y, theta):
     """
     Computes the average squared difference between an observation’s actual and
@@ -41,15 +49,16 @@ def compute_cost(X, y, theta):
     Returns a single value:
     - J: the cost associated with the current set of parameters (single number).
     """
-    
-    J = 0  # Use J for the cost.
-    ###########################################################################
-    # TODO: Implement the MSE cost function.                                  #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    totalSum = 0
+    m = len(X[0])
+    for i in range(m):
+        instanceFeaturesVector = []
+        for feature in range(len(X)):
+            instanceFeaturesVector.append(X[feature][i])
+        dotProduct = calcDotProduct(instanceFeaturesVector, theta)
+        totalSum += (dotProduct - y[i]) ** 2
+
+    J = totalSum * 0.5 / m
     return J
 
 def gradient_descent(X, y, theta, alpha, num_iters):
