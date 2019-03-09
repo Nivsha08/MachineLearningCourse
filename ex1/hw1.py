@@ -36,6 +36,12 @@ def calcDotProduct(X, theta):
         sum += (X[i] * theta[i])
     return sum
 
+def getInstaceFeaturesVector(X, i):
+    instanceFeaturesVector = []
+    for feature in range(len(X)):
+        instanceFeaturesVector.append(X[feature][i])
+    return instanceFeaturesVector
+
 def compute_cost(X, y, theta):
     """
     Computes the average squared difference between an observation’s actual and
@@ -51,12 +57,8 @@ def compute_cost(X, y, theta):
     """
     totalSum = 0
     m = len(X[0])
-    for i in range(m):
-        instanceFeaturesVector = []
-        for feature in range(len(X)):
-            instanceFeaturesVector.append(X[feature][i])
-        dotProduct = calcDotProduct(instanceFeaturesVector, theta)
-        totalSum += (dotProduct - y[i]) ** 2
+
+    totalSum = np.sum((np.dot(theta, X) - y) ** 2)
 
     J = totalSum * 0.5 / m
     return J
@@ -80,15 +82,15 @@ def gradient_descent(X, y, theta, alpha, num_iters):
     - theta: The learned parameters of your model.
     - J_history: the loss value for every iteration.
     """
-    
     J_history = [] # Use a python list to save cost in every iteration
-    ###########################################################################
-    # TODO: Implement the gradient descent optimization algorithm.            #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+
+    m = len(X[0])
+
+    for i in range(num_iters):
+        totalSum = (np.dot(theta, X) - y) * X
+        theta = theta - np.sum(totalSum) * alpha / m
+        J_history.append(compute_cost(X, y, theta))
+
     return theta, J_history
 
 def pinv(X, y):
