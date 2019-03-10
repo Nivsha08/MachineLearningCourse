@@ -87,9 +87,9 @@ def gradient_descent(X, y, theta, alpha, num_iters):
     m = len(X[0])
 
     for i in range(num_iters):
-        totalSum = (np.dot(theta, X) - y) * X
-        theta = theta - np.sum(totalSum) * alpha / m
-        J_history.append(compute_cost(X, y, theta))
+        totalSum = (np.dot(theta, X) - y)
+        theta = theta - np.dot(totalSum, np.transpose(X)) * alpha / m
+        J_history.append(totalSum ** 2 * 0.5 / m)
 
     return theta, J_history
 
