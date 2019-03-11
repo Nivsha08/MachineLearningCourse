@@ -146,14 +146,14 @@ def find_best_alpha(X, y, iterations):
     """
 
     alphas = [0.00001, 0.00003, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 2, 3]
+    startingTheta = [-1, 2]
     alpha_dict = {}
-    ###########################################################################
-    # TODO: Implement the function.                                           #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+
+    for alpha in alphas:
+        J_history = efficient_gradient_descent(X, y, startingTheta, alpha, iterations)[1]
+        lastCost = J_history[-1]
+        alpha_dict[alpha] = lastCost
+
     return alpha_dict
 
 
