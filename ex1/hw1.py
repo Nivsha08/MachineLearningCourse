@@ -3,16 +3,6 @@ import itertools
 
 np.random.seed(42)
 
-
-def meanNormalizeList(list):
-    meanOfFeature = np.mean(list)
-    maxOfFeature = np.max(list)
-    minOfFeature = np.min(list)
-
-    meanNormalizedFeature = lambda x: (x - meanOfFeature) / (maxOfFeature - minOfFeature)
-    return [meanNormalizedFeature(value) for value in list]
-
-
 def preprocess(X, y):
     """
     Perform mean normalization on the features and divide the true labels by
@@ -26,8 +16,8 @@ def preprocess(X, y):
     - X: The mean normalized inputs.
     - y: The scaled labels.
     """
-    X = meanNormalizeList(X)
-    y = meanNormalizeList(y)
+    X = (X - np.average(X, axis=0)) / (np.max(X, axis=0) - np.min(X, axis=0))
+    y = (y - np.average(y, axis=0)) / (np.max(y, axis=0) - np.min(y, axis=0))
     return X, y
 
 def compute_cost(X, y, theta):
@@ -92,7 +82,6 @@ def pinv(X, y):
     ########## DO NOT USE numpy.pinv ##############
     """
 
-    pinv_theta = None
     xTranspose = X.T
     pinvX = np.dot(np.linalg.inv(np.dot(xTranspose, X)), xTranspose)
     pinv_theta = np.dot(pinvX, y)
