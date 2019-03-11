@@ -1,5 +1,6 @@
 import numpy as np
 import itertools
+
 np.random.seed(42)
 
 
@@ -29,19 +30,6 @@ def preprocess(X, y):
     y = meanNormalizeList(y)
     return X, y
 
-def calcDotProduct(X, theta):
-    dim = len(X)
-    sum = 0
-    for i in range(dim):
-        sum += (X[i] * theta[i])
-    return sum
-
-def getInstaceFeaturesVector(X, i):
-    instanceFeaturesVector = []
-    for feature in range(len(X)):
-        instanceFeaturesVector.append(X[feature][i])
-    return instanceFeaturesVector
-
 def compute_cost(X, y, theta):
     """
     Computes the average squared difference between an observation’s actual and
@@ -55,12 +43,9 @@ def compute_cost(X, y, theta):
     Returns a single value:
     - J: the cost associated with the current set of parameters (single number).
     """
-    totalSum = 0
-    m = len(X[0])
-
-    totalSum = np.sum((np.dot(theta, X) - y) ** 2)
-
-    J = totalSum * 0.5 / m
+    m = len(X)
+    meanSquares = np.sum((np.dot(X, theta) - y) ** 2)
+    J = 1 / (2 * m) * meanSquares
     return J
 
 def gradient_descent(X, y, theta, alpha, num_iters):
@@ -82,16 +67,15 @@ def gradient_descent(X, y, theta, alpha, num_iters):
     - theta: The learned parameters of your model.
     - J_history: the loss value for every iteration.
     """
-    J_history = [] # Use a python list to save cost in every iteration
-
-    m = len(X[0])
-
+    J_history = []  # Use a python list to save cost in every iteration
+    m = len(X)
     for i in range(num_iters):
-        totalSum = (np.dot(theta, X) - y)
-        theta = theta - np.dot(totalSum, np.transpose(X)) * alpha / m
-        J_history.append(totalSum ** 2 * 0.5 / m)
+        sum = np.dot((np.dot(X, theta) - y), X)
+        theta = theta - sum * alpha / m
+        J_history.append(compute_cost(X, y, theta))
 
     return theta, J_history
+
 
 def pinv(X, y):
     """
@@ -107,16 +91,13 @@ def pinv(X, y):
 
     ########## DO NOT USE numpy.pinv ##############
     """
-    
+
     pinv_theta = None
-    ###########################################################################
-    # TODO: Implement the pseudoinverse algorithm.                            #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    xTranspose = X.T
+    pinvX = np.dot(np.linalg.inv(np.dot(xTranspose, X)), xTranspose)
+    pinv_theta = np.dot(pinvX, y)
     return pinv_theta
+
 
 def efficient_gradient_descent(X, y, theta, alpha, num_iters):
     """
@@ -135,16 +116,21 @@ def efficient_gradient_descent(X, y, theta, alpha, num_iters):
     - theta: The learned parameters of your model.
     - J_history: the loss value for every iteration.
     """
-    
-    J_history = [] # Use a python list to save cost in every iteration
-    ###########################################################################
-    # TODO: Implement the gradient descent optimization algorithm.            #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+
+    J_history = []  # Use a python list to save cost in every iteration
+    m = len(X)
+    i = 0
+
+    while i < num_iters:
+        sum = np.dot((np.dot(X, theta) - y), X)
+        theta = theta - sum * alpha / m
+        newCost = compute_cost(X, y, theta)
+        if J_history and newCost < 1e-8:
+            break
+        J_history.append(newCost)
+        i += 1
     return theta, J_history
+
 
 def find_best_alpha(X, y, iterations):
     """
@@ -158,7 +144,7 @@ def find_best_alpha(X, y, iterations):
     - alpha_dict: A python dictionary that hold the loss value after training 
     for every value of alpha.
     """
-    
+
     alphas = [0.00001, 0.00003, 0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 2, 3]
     alpha_dict = {}
     ###########################################################################
@@ -169,6 +155,7 @@ def find_best_alpha(X, y, iterations):
     #                             END OF YOUR CODE                            #
     ###########################################################################
     return alpha_dict
+
 
 def generate_triplets(X):
     """
@@ -182,7 +169,7 @@ def generate_triplets(X):
     Returns:
     - A python list containing all feature triplets.
     """
-    
+
     triplets = []
     ###########################################################################
     # TODO: Implement the function.                                           #
@@ -192,6 +179,7 @@ def generate_triplets(X):
     #                             END OF YOUR CODE                            #
     ###########################################################################
     return triplets
+
 
 def find_best_triplet(df, triplets, alpha, num_iter):
     """
