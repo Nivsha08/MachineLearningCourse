@@ -114,7 +114,8 @@ def efficient_gradient_descent(X, y, theta, alpha, num_iters):
         sum = np.dot((np.dot(X, theta) - y), X)
         theta = theta - sum * alpha / m
         newCost = compute_cost(X, y, theta)
-        if J_history and newCost < 1e-8:
+        if J_history and J_history[i - 1] - newCost < 1e-8:
+            J_history.append(newCost)
             break
         J_history.append(newCost)
         i += 1
@@ -159,14 +160,7 @@ def generate_triplets(X):
     - A python list containing all feature triplets.
     """
 
-    triplets = []
-    ###########################################################################
-    # TODO: Implement the function.                                           #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    triplets = list(itertools.combinations(X, 3))
     return triplets
 
 
@@ -187,12 +181,34 @@ def find_best_triplet(df, triplets, alpha, num_iter):
     Returns:
     - The best triplet as a python list holding the best triplet as strings.
     """
-    best_triplet = None
-    ###########################################################################
-    # TODO: Implement the function.                                           #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    irrelevantFeatures = ['id', 'date', 'price']
+    features = df.drop(columns=irrelevantFeatures)
+
+    allData = df.columns
+    y = np.array(df['price'])
+
+    # allData, y = preprocess(allData, y)
+    triplet_costs_dict = {}
+
+    for triplet in triplets:
+        col_index_list = []
+        for i in range(3):
+            col_index_list.append(df.columns.get_loc(triplet[i]))
+
+        print(col_index_list)
+        testData = allData[:, col_index_list]
+
+        # testData = np.array(allData[list(triplet)])
+
+        # bias trick
+        testData = testData.T
+        biasCol = np.ones_like(testData[0])
+        testData = np.vstack((biasCol, testData)).T
+
+        startingTheta = np.ones(shape=len(testData[0]))
+
+        triplet_cost = efficient_gradient_descent(testData, y, startingTheta, alpha, num_iter)[1][-1]
+        triplet_costs_dict[triplet] = triplet_cost
+
+    best_triplet = min(triplet_costs_dict, key=lambda x: triplet_costs_dict.get(x))
     return best_triplet
