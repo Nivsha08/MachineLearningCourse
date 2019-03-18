@@ -115,10 +115,10 @@ def efficient_gradient_descent(X, y, theta, alpha, num_iters):
         sum2 = np.dot(sum1,X)/m
         theta = theta - np.multiply(sum2 ,alpha)
         newCost = compute_cost(X, y, theta)
-        J_history.append(newCost)
-        if (i>=1 and J_history[i - 1] - newCost < 1e-8):
-            break
-        
+        if i % 100 == 0:
+            J_history.append(newCost)
+            if i / 100 >= 2 and J_history[-1] > J_history[-2]:
+                break
         i += 1
     return theta, J_history
 
