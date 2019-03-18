@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5820efc1-da67-4eab-9c1f-6ef9dc9cb45c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hw1.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hwa1.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/hwa1.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,15 +12,15 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/ex1$ex1.coverage" NAME="ex1 Coverage Results" MODIFIED="1552903347140" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/ex1$ex1.coverage" NAME="ex1 Coverage Results" MODIFIED="1552918439877" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hw1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="454">
-              <caret line="124" lean-forward="true" selection-start-line="124" selection-end-line="124" />
+            <state relative-caret-position="372">
+              <caret line="123" column="26" lean-forward="true" selection-start-line="123" selection-start-column="26" selection-end-line="123" selection-end-column="26" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -52,8 +52,8 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/test.ipynb" />
-        <option value="$PROJECT_DIR$/hw1.py" />
         <option value="$PROJECT_DIR$/hwa1.ipynb" />
+        <option value="$PROJECT_DIR$/hw1.py" />
       </list>
     </option>
   </component>
@@ -69,6 +69,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -85,7 +86,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -169,12 +169,13 @@
       <workItem from="1552736046910" duration="2469000" />
       <workItem from="1552855264747" duration="109000" />
       <workItem from="1552855375044" duration="664000" />
-      <workItem from="1552903184944" duration="486000" />
+      <workItem from="1552903184944" duration="694000" />
+      <workItem from="1552917991443" duration="1462000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36559000" />
+    <option name="totallyTimeSpent" value="38229000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -189,12 +190,12 @@
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28540772" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28898427" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32771084" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.14578313" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -228,8 +229,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hw1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="454">
-          <caret line="124" lean-forward="true" selection-start-line="124" selection-end-line="124" />
+        <state relative-caret-position="372">
+          <caret line="123" column="26" lean-forward="true" selection-start-line="123" selection-start-column="26" selection-end-line="123" selection-end-column="26" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

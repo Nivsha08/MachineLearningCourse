@@ -39,6 +39,8 @@ def compute_cost(X, y, theta):
     J = meanSquares.sum(axis=0)
     J = J / (2*m)
     return J
+
+
 def gradient_descent(X, y, theta, alpha, num_iters):
     """
     Learn the parameters of the model using gradient descent. Gradient descent
@@ -108,20 +110,27 @@ def efficient_gradient_descent(X, y, theta, alpha, num_iters):
     """
 
     J_history = []  # Use a python list to save cost in every iteration
+    J_iterationsHistory = []
     m = X.shape[0]
     i = 0
     while i < num_iters:
-        sum1 = np.subtract(np.dot(X, theta) ,y)
-        sum2 = np.dot(sum1,X)/m
-        theta = theta - np.multiply(sum2 ,alpha)
+        sum1 = np.subtract(np.dot(X, theta), y)
+        sum2 = np.dot(sum1, X)/m
+        theta = theta - np.multiply(sum2, alpha)
         newCost = compute_cost(X, y, theta)
-        if i % 100 == 0:
+        if i >= 1 and J_history[i - 1] - newCost < 1e-8:
             J_history.append(newCost)
-            if i / 100 >= 2 and J_history[-1] > J_history[-2]:
+            break
+        elif i % 100 == 0:
+            J_history.append(newCost)
+            if len(J_iterationsHistory) >= 2 and newCost > J_iterationsHistory[-1]:
+                J_iterationsHistory.append(newCost)
                 break
+        else:
+            J_history.append(newCost)
         i += 1
     return theta, J_history
-
+# 
 
 def find_best_alpha(X, y, iterations):
     """
