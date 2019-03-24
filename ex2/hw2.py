@@ -20,9 +20,8 @@ def calc_gini(data):
     Returns the gini impurity of the dataset.    
     """
     gini = 0.0
-    count_of_labels = []
 
-    if data.size > 1:
+    if data.shape[1] > 1:
         label_col = data[:, data.shape[1] - 1]
         labels, count_of_labels = np.unique(label_col, return_counts=True)
         num_of_labels = len(labels)
@@ -33,7 +32,7 @@ def calc_gini(data):
             gini -= np.power(probability, 2)
         gini = 1 + gini
 
-    return gini, count_of_labels
+    return gini
 
 
 def calc_entropy(data):
@@ -46,18 +45,19 @@ def calc_entropy(data):
     Returns the entropy of the dataset.    
     """
     entropy = 0.0
-    count_of_labels = []
 
-    if data.size > 1:
+    if data.shape[1] > 1:
         label_col = data[:, data.shape[1] - 1]
         labels, count_of_labels = np.unique(label_col, return_counts=True)
         num_of_labels = len(labels)
+        if num_of_labels == 1:
+            return entropy
         sum_of_classes = np.sum(count_of_labels)
         for i in range(num_of_labels):
-            probability = (count_of_labels[i] / sum_of_classes)
-            entropy -= probability * np.log2(probability)
+            probability = np.divide(count_of_labels[i], sum_of_classes)
+            entropy -= np.multiply(probability, np.log2(probability))
 
-    return entropy, count_of_labels
+    return entropy
 
 
 class DecisionNode:
@@ -67,15 +67,26 @@ class DecisionNode:
     # functionality as described in the notebook. It is highly recommended that you 
     # first read and understand the entire exercise before diving into this class.
 
-    def __init__(self, feature, value, count_of_labels_split):
+    def __init__(self, feature, value, group_a_size, group_b_size):
         self.feature = feature  # column index of criteria being tested
         self.value = value  # value necessary to get a true result
         self.children = []
-        if count_of_labels_split is not None:
-            self.count_of_labels_split = count_of_labels_split
+        self.group_a_instances = group_a_size
+        self.group_b_instances = group_b_size
 
     def add_child(self, node):
         self.children.append(node)
+
+    def to_string(self):
+        if self.group_a_instances > 0 and self.group_b_instances > 0:
+            print("[A%d <= %f]" % (self.feature, self.value))
+            print(" ", end=" ")
+        elif self.group_a_instances > 0:
+            print("leaf: [{1.0: %d}]" % self.group_a_instances)
+            print(" ", end=" ")
+        else:
+            print("leaf: [{0.0: %d}]" % self.group_b_instances)
+            print(" ", end=" ")
 
 
 def build_thresholds_for_attribute_values(data, attribute_index):
@@ -89,23 +100,41 @@ def build_thresholds_for_attribute_values(data, attribute_index):
 
 
 def calc_weighted_average_by_attribute(data, attribute_index, threshold, impurity):
-    group_a_instances_data, group_b_instances_data = split_data(data, attribute_index, threshold)
-    S = data.shape[0]
-    Sv = group_a_instances_data.shape[0]
-    weighted_average = (np.divide(Sv, S) * impurity(group_a_instances_data)[0]) + \
-                       (np.divide(S - Sv, S) * impurity(group_b_instances_data)[0])
+    group_a_instances, group_b_instances, sv_a, sv_b = split_data(data, attribute_index, threshold)
+    S = sv_a + sv_b
+    weighted_average = (np.divide(sv_a, S) * impurity(group_a_instances)) + \
+                       (np.divide(sv_b, S) * impurity(group_b_instances))
     return weighted_average
 
 
 def split_data(data, attribute_index, threshold):
     group_a_rows_indices = []
     group_b_rows_indices = []
-    for i in range(data.shape[0] - 1):
-        if data[i][attribute_index] < threshold:
+    for i in range(data.shape[0]):
+        if data[i][attribute_index] <= threshold:
             group_a_rows_indices.append(i)
         else:
             group_b_rows_indices.append(i)
-    return data[group_a_rows_indices, :], data[group_b_rows_indices, :]
+    return data[group_a_rows_indices, :], data[group_b_rows_indices, :], \
+           len(group_a_rows_indices), len(group_b_rows_indices)
+
+
+def find_best_information_gain_params(data, impurity):
+    current_impurity = impurity(data)
+    print(current_impurity)
+    best_information_gain = 0
+    best_attribute_index = 0
+    best_threshold = 0
+    for attribute_index in range(data.shape[1]):
+        thresholds = build_thresholds_for_attribute_values(data, attribute_index)
+        for threshold in thresholds:
+            weighted_average = calc_weighted_average_by_attribute(data, attribute_index, threshold, impurity)
+            information_gain = current_impurity - weighted_average
+            if information_gain > best_information_gain:
+                best_information_gain = information_gain
+                best_attribute_index = attribute_index
+                best_threshold = threshold
+    return best_information_gain, best_attribute_index, best_threshold
 
 
 def remove_attribute_column(data, attribute_index):
@@ -124,33 +153,20 @@ def build_tree(data, impurity):
 
     Output: the root node of the tree.
     """
-    attributes = list(range(data.shape[1]))
-    node_impurity, node_count_of_labels = impurity(data)
-
-    if data.size > 1 or node_impurity > 0:
-        best_information_gain = 0
-        best_information_gain_attribute_index = 0
-        best_threshold_of_attribute = 0
-        for attribute_index in attributes:
-            thresholds = build_thresholds_for_attribute_values(data, attribute_index)
-            for threshold in thresholds:
-                weighted_average = calc_weighted_average_by_attribute(data, attribute_index, threshold, impurity)
-                information_gain = node_impurity - weighted_average
-                if information_gain > best_information_gain:
-                    best_information_gain = information_gain
-                    best_information_gain_attribute_index = attribute_index
-                    best_threshold_of_attribute = threshold
-        attributes.remove(best_information_gain_attribute_index)
-        root = DecisionNode(best_information_gain_attribute_index, best_threshold_of_attribute, None)
-        group_a_instances_data, group_b_instances_data = split_data(data, best_information_gain_attribute_index,
-                                                                    best_threshold_of_attribute)
-        group_a_instances_data = remove_attribute_column(group_a_instances_data, best_information_gain_attribute_index)
-        group_b_instances_data = remove_attribute_column(group_b_instances_data, best_information_gain_attribute_index)
-        root.add_child(build_tree(group_a_instances_data, impurity))
-        root.add_child(build_tree(group_b_instances_data, impurity))
+    node_impurity = impurity(data)
+    if node_impurity == 0:
+        root = DecisionNode(None, None, 0, 0)
+    elif data.shape[1] > 1:
+        information_gain, attribute_index, threshold = find_best_information_gain_params(data, impurity)
+        group_a_instances, group_b_instances, group_a_size, group_b_size = split_data(data, attribute_index, threshold)
+        root = DecisionNode(attribute_index, threshold, group_a_size, group_b_size)
+        # print("(%d,%d)" % (root.group_a_instances, root.group_b_instances))
+        group_a_instances = remove_attribute_column(group_a_instances, attribute_index)
+        group_b_instances = remove_attribute_column(group_b_instances, attribute_index)
+        root.add_child(build_tree(group_a_instances, impurity))
+        root.add_child(build_tree(group_b_instances, impurity))
     else:
-        print(data)
-        root = DecisionNode(None, None, node_count_of_labels)
+        root = DecisionNode(None, None, 0, 0)
     return root
 
 
@@ -207,10 +223,6 @@ def print_tree(node):
 
     This function has no return value
     """
-    if len(node.children) == 0:
-        print("leaf")
-        print(node.count_of_labels_split)
-    else:
-        print("[A%d <= %d]" % (node.feature, node.value))
-        for child in node.children:
-            print_tree(child)
+    node.to_string();
+    for child_node in node.children:
+        child_node.to_string();
