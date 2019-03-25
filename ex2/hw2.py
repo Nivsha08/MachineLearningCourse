@@ -70,6 +70,8 @@ class DecisionNode:
     def __init__(self, feature, value, group_a_size, group_b_size):
         self.feature = feature  # column index of criteria being tested
         self.value = value  # value necessary to get a true result
+        self.leaf_label = None
+        self.leaf_count = None
         self.children = []
         self.group_a_instances = group_a_size
         self.group_b_instances = group_b_size
@@ -79,15 +81,10 @@ class DecisionNode:
 
     def to_string(self):
         if len(self.children) == 0:
-            if self.group_a_instances > 0:
-                print("leaf: [{1.0: %d}]" % self.group_a_instances)
-                print(" ", end=" ")
-            else:
-                print("leaf: [{0.0: %d}]" % self.group_b_instances)
-                print(" ", end=" ")
+            print(" ", end=" ")
+            print("leaf: [{%d: %d}]" % (self.leaf_label, self.leaf_count))
         else:
             print("[A%d <= %f]" % (self.feature, self.value))
-            print(" ", end=" ")
 
 
 def build_thresholds_for_attribute_values(data, attribute_index):
@@ -124,7 +121,6 @@ def find_best_information_gain_params(data, impurity):
         for threshold in thresholds:
             weighted_average = calc_weighted_average_by_attribute(data, attribute_index, threshold, impurity)
             information_gain = current_impurity - weighted_average
-            # print(attribute_index, threshold, information_gain)
             if information_gain > best_information_gain:
                 best_information_gain = information_gain
                 best_attribute_index = attribute_index
@@ -153,10 +149,15 @@ def build_tree(data, impurity):
         information_gain, attribute_index, threshold = find_best_information_gain_params(data, impurity)
         group_a_instances, group_b_instances, group_a_size, group_b_size = split_data(data, attribute_index, threshold)
         root = DecisionNode(attribute_index, threshold, group_a_size, group_b_size)
-        # print("(%d,%d)" % (root.group_a_instances, root.group_b_instances))
         group_a_instances = remove_attribute_column(group_a_instances, attribute_index)
         group_b_instances = remove_attribute_column(group_b_instances, attribute_index)
-        if group_a_size == 0 or group_b_size == 0:
+        if group_a_size == 0:
+            root.leaf_label = group_b_instances[0][-1]
+            root.leaf_count = group_b_size
+            return root
+        elif group_b_size == 0:
+            root.leaf_label = group_a_instances[0][-1]
+            root.leaf_count = group_a_size
             return root
         else:
             root.add_child(build_tree(group_a_instances, impurity))
@@ -208,6 +209,14 @@ def calc_accuracy(node, dataset):
     return accuracy
 
 
+def print_tree_acc(node, acc):
+    node.to_string();
+    if len(node.children) > 0:
+        for child_node in node.children:
+            print("%s" % ("   " * acc), end="")
+            print_tree_acc(child_node, (acc + 1))
+
+
 def print_tree(node):
     """
     prints the tree according to the example in the notebook
@@ -217,7 +226,4 @@ def print_tree(node):
 
     This function has no return value
     """
-    node.to_string();
-    if len(node.children) > 0:
-        for child_node in node.children:
-            print_tree(child_node)
+    print_tree_acc(node, 1)

@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="fe04b4df-8b3d-44f4-bbe3-a2f95ada74ff" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.ipynb_checkpoints/hwa2-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/.ipynb_checkpoints/hwa2-checkpoint.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hw2.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hwa2.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/hwa2.ipynb" afterDir="false" />
     </list>
@@ -18,8 +17,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hw2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="481">
-              <caret line="154" column="39" selection-start-line="154" selection-start-column="39" selection-end-line="154" selection-end-column="39" />
+            <state relative-caret-position="576">
+              <caret line="226" column="37" lean-forward="true" selection-start-line="226" selection-start-column="37" selection-end-line="226" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -48,7 +47,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+  <component name="ProjectFrameBounds" fullScreen="true">
     <option name="width" value="1440" />
     <option name="height" value="900" />
   </component>
@@ -59,20 +58,7 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="ex2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ex2" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -107,12 +93,13 @@
       <workItem from="1553431500219" duration="31000" />
       <workItem from="1553438959232" duration="11152000" />
       <workItem from="1553497147808" duration="2671000" />
-      <workItem from="1553505883934" duration="3816000" />
+      <workItem from="1553505883934" duration="3874000" />
+      <workItem from="1553521891703" duration="2480000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32650000" />
+    <option name="totallyTimeSpent" value="35188000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -156,8 +143,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/hw2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
-          <caret line="154" column="39" selection-start-line="154" selection-start-column="39" selection-end-line="154" selection-end-column="39" />
+        <state relative-caret-position="576">
+          <caret line="226" column="37" lean-forward="true" selection-start-line="226" selection-start-column="37" selection-end-line="226" selection-end-column="37" />
         </state>
       </provider>
     </entry>
