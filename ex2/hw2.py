@@ -176,15 +176,17 @@ def predict(node, instance):
 
     Output: the prediction of the instance.
     """
-    pred = None
-    ###########################################################################
-    # TODO: Implement the function.                                           #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
-    return pred
+    if len(node.children) == 0:
+        predict_label = node.leaf_label
+    else:
+        split_attribute = node.feature
+        split_threshold = node.value
+        instance_value_of_attribute = instance[split_attribute]
+        if instance_value_of_attribute <= split_threshold:
+            predict_label = predict(node.children[0], instance)
+        else:
+            predict_label = predict(node.children[1], instance)
+    return predict_label
 
 
 def calc_accuracy(node, dataset):
@@ -198,14 +200,14 @@ def calc_accuracy(node, dataset):
 
     Output: the accuracy of the decision tree on the given dataset (%).
     """
-    accuracy = 0.0
-    ###########################################################################
-    # TODO: Implement the function.                                           #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    success_predictions_count = 0
+    total_instances = dataset.shape[0]
+    for instance_index in range(total_instances):
+        actual_label = dataset[instance_index][-1]
+        model_prediction = predict(node, dataset[instance_index, :])
+        if model_prediction == actual_label:
+            success_predictions_count += 1
+    accuracy = (success_predictions_count / total_instances) * 100
     return accuracy
 
 
