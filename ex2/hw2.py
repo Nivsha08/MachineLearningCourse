@@ -67,11 +67,12 @@ class DecisionNode:
     # functionality as described in the notebook. It is highly recommended that you 
     # first read and understand the entire exercise before diving into this class.
 
+    p_value = 1
+
     def __init__(self, feature, value, group_a_size, group_b_size):
         self.feature = feature  # column index of criteria being tested
         self.value = value  # value necessary to get a true result
-        self.leaf_label = None
-        self.leaf_count = None
+        self.labels_split = {}
         self.children = []
         self.group_a_instances = group_a_size
         self.group_b_instances = group_b_size
@@ -81,8 +82,8 @@ class DecisionNode:
 
     def to_string(self):
         if len(self.children) == 0:
-            print(" ", end=" ")
-            print("leaf: [{%d: %d}]" % (self.leaf_label, self.leaf_count))
+            for label in self.labels_split:
+                print("leaf: [{%d: %d}]" % (label, self.labels_split[label]))
         else:
             print("[A%d <= %f]" % (self.feature, self.value))
 
@@ -132,6 +133,59 @@ def remove_attribute_column(data, attribute_index):
     return np.delete(data, attribute_index, axis=1)
 
 
+def set_node_labels_split_information(node, data):
+    labels, count_of_labels = np.unique(data[:, -1], return_counts=True)
+    for i in range(len(count_of_labels)):
+        node.labels_split[labels[i]] = count_of_labels[i]
+
+
+def compute_chi_square_value_group_a(attribute_index, threshold, data, D):
+    count_of_labels = np.unique(data[:, -1], return_counts=True)[1]
+    group_a_probability = count_of_labels[0] / D
+    group_b_probability = 1 - group_a_probability
+    df = data[data[:, attribute_index] <= threshold].shape[0]
+    pf = data[data[:, attribute_index] <= threshold]
+    pf = pf[pf[:, -1] == 0].shape[0]
+    nf = data[data[:, attribute_index] <= threshold]
+    nf = nf[nf[:, -1] == 1].shape[0]
+    E0 = df * group_a_probability
+    E1 = df * group_b_probability
+    if E0 != 0 and E1 != 0:
+        chi_value = (np.power((pf - E0), 2) / E0) + (np.power((nf - E1), 2) / E1)
+        return chi_value
+    else:
+        return 0
+
+
+def compute_chi_square_value_group_b(attribute_index, threshold, data, D):
+    count_of_labels = np.unique(data[:, -1], return_counts=True)[1]
+    group_b_probability = count_of_labels[0] / D
+    group_a_probability = 1 - group_b_probability
+    df = data[data[:, attribute_index] > threshold].shape[0]
+    pf = data[data[:, attribute_index] > threshold]
+    pf = pf[pf[:, -1] == 0].shape[0]
+    nf = data[data[:, attribute_index] > threshold]
+    nf = nf[nf[:, -1] == 1].shape[0]
+    E0 = df * group_a_probability
+    E1 = df * group_b_probability
+    if E0 != 0 and E1 != 0:
+        chi_value = (np.power((pf - E0), 2) / E0) + (np.power((nf - E1), 2) / E1)
+        return chi_value
+    else:
+        return 0
+
+
+def compute_node_chi_value(attribute_index, threshold, group_a_instances, group_b_instances, group_a_size,
+                           group_b_size):
+    D = group_b_size + group_a_size
+    return compute_chi_square_value_group_a(attribute_index, threshold, group_a_instances, D) + \
+           compute_chi_square_value_group_b(attribute_index, threshold, group_b_instances, D)
+
+
+def chi_square_test(node_chi_value, p_value):
+    return p_value == 1 or node_chi_value > chi_table[p_value]
+
+
 def build_tree(data, impurity):
     """
     Build a tree using the given impurity measure and training dataset. 
@@ -151,19 +205,27 @@ def build_tree(data, impurity):
         root = DecisionNode(attribute_index, threshold, group_a_size, group_b_size)
         group_a_instances = remove_attribute_column(group_a_instances, attribute_index)
         group_b_instances = remove_attribute_column(group_b_instances, attribute_index)
-        if group_a_size == 0:
-            root.leaf_label = group_b_instances[0][-1]
-            root.leaf_count = group_b_size
-            return root
-        elif group_b_size == 0:
-            root.leaf_label = group_a_instances[0][-1]
-            root.leaf_count = group_a_size
+        if group_a_size == 0 or group_b_size == 0:
+            set_node_labels_split_information(root, data)
             return root
         else:
-            root.add_child(build_tree(group_a_instances, impurity))
-            root.add_child(build_tree(group_b_instances, impurity))
-            return root
+            root_chi_value = compute_node_chi_value(attribute_index, threshold, group_a_instances, group_b_instances,
+                                                    group_a_size, group_b_size)
+            root.chi_value = root_chi_value
+            if not chi_square_test(root.chi_value, root.p_value):
+                set_node_labels_split_information(root, data)
+                return root
+            else:
+                root.add_child(build_tree(group_a_instances, impurity))
+                root.add_child(build_tree(group_b_instances, impurity))
+                return root
 
+
+def calc_tree_accuracy_by_p_value(training_data, test_data, impurity, current_p_value):
+    DecisionNode.p_value = current_p_value
+    tree_root = build_tree(training_data, impurity)
+    current_accuracy = calc_accuracy(tree_root, test_data)
+    return current_accuracy
 
 def predict(node, instance):
     """
@@ -176,9 +238,10 @@ def predict(node, instance):
 
     Output: the prediction of the instance.
     """
-    if len(node.children) == 0:
-        predict_label = node.leaf_label
-    else:
+    predict_label = -1
+    if len(node.labels_split) == 1:
+        predict_label = list(node.labels_split.keys())[0]
+    elif len(node.children) != 0:
         split_attribute = node.feature
         split_threshold = node.value
         instance_value_of_attribute = instance[split_attribute]
