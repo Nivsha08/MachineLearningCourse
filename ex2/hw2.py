@@ -67,8 +67,6 @@ class DecisionNode:
     # functionality as described in the notebook. It is highly recommended that you 
     # first read and understand the entire exercise before diving into this class.
 
-    p_value = 1
-
     def __init__(self, feature, value, group_a_size, group_b_size):
         self.feature = feature  # column index of criteria being tested
         self.value = value  # value necessary to get a true result
@@ -175,18 +173,15 @@ def compute_chi_square_value_group_b(attribute_index, threshold, data, D):
         return 0
 
 
-def compute_node_chi_value(attribute_index, threshold, group_a_instances, group_b_instances, group_a_size,
-                           group_b_size):
+def compute_node_chi_statistics(attribute_index, threshold, group_a_instances, group_b_instances,
+                                group_a_size, group_b_size):
     D = group_b_size + group_a_size
-    return compute_chi_square_value_group_a(attribute_index, threshold, group_a_instances, D) + \
-           compute_chi_square_value_group_b(attribute_index, threshold, group_b_instances, D)
+    chi_value = compute_chi_square_value_group_a(attribute_index, threshold, group_a_instances, D) + \
+                compute_chi_square_value_group_b(attribute_index, threshold, group_b_instances, D)
+    return chi_value
 
 
-def chi_square_test(node_chi_value, p_value):
-    return p_value == 1 or node_chi_value > chi_table[p_value]
-
-
-def build_tree(data, impurity):
+def build_tree(data, impurity, p_value):
     """
     Build a tree using the given impurity measure and training dataset. 
     You are required to fully grow the tree until all leaves are pure. 
@@ -203,29 +198,29 @@ def build_tree(data, impurity):
         information_gain, attribute_index, threshold = find_best_information_gain_params(data, impurity)
         group_a_instances, group_b_instances, group_a_size, group_b_size = split_data(data, attribute_index, threshold)
         root = DecisionNode(attribute_index, threshold, group_a_size, group_b_size)
-        group_a_instances = remove_attribute_column(group_a_instances, attribute_index)
-        group_b_instances = remove_attribute_column(group_b_instances, attribute_index)
         if group_a_size == 0 or group_b_size == 0:
             set_node_labels_split_information(root, data)
             return root
         else:
-            root_chi_value = compute_node_chi_value(attribute_index, threshold, group_a_instances, group_b_instances,
-                                                    group_a_size, group_b_size)
-            root.chi_value = root_chi_value
-            if not chi_square_test(root.chi_value, root.p_value):
-                set_node_labels_split_information(root, data)
+            if p_value == 1:
+                root.add_child(build_tree(group_a_instances, impurity, p_value))
+                root.add_child(build_tree(group_b_instances, impurity, p_value))
                 return root
             else:
-                root.add_child(build_tree(group_a_instances, impurity))
-                root.add_child(build_tree(group_b_instances, impurity))
-                return root
+                root_chi_value = compute_node_chi_statistics(attribute_index, threshold, group_a_instances,
+                                                             group_b_instances, group_a_size, group_b_size)
+                if root_chi_value > chi_table[p_value]:
+                    root.add_child(build_tree(group_a_instances, impurity, p_value))
+                    root.add_child(build_tree(group_b_instances, impurity, p_value))
+                    return root
+                else:
+                    set_node_labels_split_information(root, data)
+                    return root
 
 
-def calc_tree_accuracy_by_p_value(training_data, test_data, impurity, current_p_value):
-    DecisionNode.p_value = current_p_value
-    tree_root = build_tree(training_data, impurity)
-    current_accuracy = calc_accuracy(tree_root, test_data)
-    return current_accuracy
+def majority_of_labels_in_node(node):
+    return max(node.labels_split, key=node.labels_split.get)
+
 
 def predict(node, instance):
     """
@@ -238,18 +233,22 @@ def predict(node, instance):
 
     Output: the prediction of the instance.
     """
-    predict_label = -1
-    if len(node.labels_split) == 1:
-        predict_label = list(node.labels_split.keys())[0]
-    elif len(node.children) != 0:
+    if len(node.children) == 0:
+        if node.group_a_instances == 0 or node.group_b_instances == 0:
+            predict_label = list(node.labels_split.keys())[0]
+            return predict_label
+        else:
+            return majority_of_labels_in_node(node)
+    else:
         split_attribute = node.feature
         split_threshold = node.value
         instance_value_of_attribute = instance[split_attribute]
         if instance_value_of_attribute <= split_threshold:
             predict_label = predict(node.children[0], instance)
+            return predict_label
         else:
             predict_label = predict(node.children[1], instance)
-    return predict_label
+            return predict_label
 
 
 def calc_accuracy(node, dataset):
@@ -275,7 +274,7 @@ def calc_accuracy(node, dataset):
 
 
 def print_tree_acc(node, acc):
-    node.to_string();
+    node.to_string()
     if len(node.children) > 0:
         for child_node in node.children:
             print("%s" % ("   " * acc), end="")
