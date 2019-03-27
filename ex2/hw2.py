@@ -137,48 +137,32 @@ def set_node_labels_split_information(node, data):
         node.labels_split[labels[i]] = count_of_labels[i]
 
 
-def compute_chi_square_value_group_a(attribute_index, threshold, data, D):
-    count_of_labels = np.unique(data[:, -1], return_counts=True)[1]
-    group_a_probability = count_of_labels[0] / D
-    group_b_probability = 1 - group_a_probability
-    df = data[data[:, attribute_index] <= threshold].shape[0]
-    pf = data[data[:, attribute_index] <= threshold]
-    pf = pf[pf[:, -1] == 0].shape[0]
-    nf = data[data[:, attribute_index] <= threshold]
-    nf = nf[nf[:, -1] == 1].shape[0]
-    E0 = df * group_a_probability
-    E1 = df * group_b_probability
-    if E0 != 0 and E1 != 0:
-        chi_value = (np.power((pf - E0), 2) / E0) + (np.power((nf - E1), 2) / E1)
-        return chi_value
-    else:
-        return 0
+def compute_chi_statistics(data, attribute_index, threshold):
+    probability_of_label_zero = (data[data[:, data.shape[1] - 1] == 0].shape[0]) / data.shape[0]
+    probability_of_label_one = 1 - probability_of_label_zero
+    less_than_threshold_instances = data[data[:, attribute_index] <= threshold]
+    df_less_than_threshold = less_than_threshold_instances.shape[0]
+    less_than_threshold_and_label_zero = less_than_threshold_instances[
+        less_than_threshold_instances[:, less_than_threshold_instances.shape[1] - 1] == 0].shape[0]
+    less_than_threshold_and_label_one = less_than_threshold_instances.shape[0] - less_than_threshold_and_label_zero
+    E0_less_than_threshold = df_less_than_threshold * probability_of_label_zero
+    E1_less_than_threshold = df_less_than_threshold * probability_of_label_one
+    chi_less_than_threshold = (np.power((less_than_threshold_and_label_zero - E0_less_than_threshold), 2) \
+                              / E0_less_than_threshold) + (np.power(
+        (less_than_threshold_and_label_one - E1_less_than_threshold), 2) / E1_less_than_threshold)
 
+    more_than_threshold_instances = data[data[:, attribute_index] > threshold]
+    df_more_than_threshold = more_than_threshold_instances.shape[0]
+    more_than_threshold_and_label_zero = more_than_threshold_instances[
+        more_than_threshold_instances[:, more_than_threshold_instances.shape[1] - 1] == 0].shape[0]
+    more_than_threshold_and_label_one = more_than_threshold_instances.shape[0] - more_than_threshold_and_label_zero
+    E0_more_than_threshold = df_more_than_threshold * probability_of_label_zero
+    E1_more_than_threshold = df_more_than_threshold * probability_of_label_one
+    chi_more_than_threshold = (np.power((more_than_threshold_and_label_zero - E0_more_than_threshold), 2) \
+                               / E0_more_than_threshold) + (np.power(
+        (more_than_threshold_and_label_one - E1_more_than_threshold), 2) / E1_more_than_threshold)
 
-def compute_chi_square_value_group_b(attribute_index, threshold, data, D):
-    count_of_labels = np.unique(data[:, -1], return_counts=True)[1]
-    group_b_probability = count_of_labels[0] / D
-    group_a_probability = 1 - group_b_probability
-    df = data[data[:, attribute_index] > threshold].shape[0]
-    pf = data[data[:, attribute_index] > threshold]
-    pf = pf[pf[:, -1] == 0].shape[0]
-    nf = data[data[:, attribute_index] > threshold]
-    nf = nf[nf[:, -1] == 1].shape[0]
-    E0 = df * group_a_probability
-    E1 = df * group_b_probability
-    if E0 != 0 and E1 != 0:
-        chi_value = (np.power((pf - E0), 2) / E0) + (np.power((nf - E1), 2) / E1)
-        return chi_value
-    else:
-        return 0
-
-
-def compute_node_chi_statistics(attribute_index, threshold, group_a_instances, group_b_instances,
-                                group_a_size, group_b_size):
-    D = group_b_size + group_a_size
-    chi_value = compute_chi_square_value_group_a(attribute_index, threshold, group_a_instances, D) + \
-                compute_chi_square_value_group_b(attribute_index, threshold, group_b_instances, D)
-    return chi_value
+    return chi_less_than_threshold + chi_more_than_threshold
 
 
 def build_tree(data, impurity, p_value):
@@ -207,8 +191,7 @@ def build_tree(data, impurity, p_value):
                 root.add_child(build_tree(group_b_instances, impurity, p_value))
                 return root
             else:
-                root_chi_value = compute_node_chi_statistics(attribute_index, threshold, group_a_instances,
-                                                             group_b_instances, group_a_size, group_b_size)
+                root_chi_value = compute_chi_statistics(data, attribute_index, threshold)
                 if root_chi_value > chi_table[p_value]:
                     root.add_child(build_tree(group_a_instances, impurity, p_value))
                     root.add_child(build_tree(group_b_instances, impurity, p_value))
