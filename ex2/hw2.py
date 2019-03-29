@@ -177,28 +177,25 @@ def build_tree(data, impurity, p_value):
 
     Output: the root node of the tree.
     """
-    node_impurity = impurity(data)
-    if data is not None and data.shape[1] > 1:
-        information_gain, attribute_index, threshold = find_best_information_gain_params(data, impurity)
-        group_a_instances, group_b_instances, group_a_size, group_b_size = split_data(data, attribute_index, threshold)
-        root = DecisionNode(attribute_index, threshold, group_a_size, group_b_size)
-        if group_a_size == 0 or group_b_size == 0:
-            set_node_labels_split_information(root, data)
+    information_gain, attribute_index, threshold = find_best_information_gain_params(data, impurity)
+    group_a_instances, group_b_instances, group_a_size, group_b_size = split_data(data, attribute_index, threshold)
+    root = DecisionNode(attribute_index, threshold, group_a_size, group_b_size)
+    set_node_labels_split_information(root, data)
+    if group_a_size == 0 or group_b_size == 0:
+        return root
+    else:
+        if p_value == 1:
+            root.add_child(build_tree(group_a_instances, impurity, p_value))
+            root.add_child(build_tree(group_b_instances, impurity, p_value))
             return root
         else:
-            if p_value == 1:
+            root_chi_value = compute_chi_statistics(data, attribute_index, threshold)
+            if root_chi_value > chi_table[p_value]:
                 root.add_child(build_tree(group_a_instances, impurity, p_value))
                 root.add_child(build_tree(group_b_instances, impurity, p_value))
                 return root
             else:
-                root_chi_value = compute_chi_statistics(data, attribute_index, threshold)
-                if root_chi_value > chi_table[p_value]:
-                    root.add_child(build_tree(group_a_instances, impurity, p_value))
-                    root.add_child(build_tree(group_b_instances, impurity, p_value))
-                    return root
-                else:
-                    set_node_labels_split_information(root, data)
-                    return root
+                return root
 
 
 def majority_of_labels_in_node(node):
@@ -254,6 +251,85 @@ def calc_accuracy(node, dataset):
             success_predictions_count += 1
     accuracy = (success_predictions_count / total_instances) * 100
     return accuracy
+
+
+def count_tree_nodes(root):
+    if len(root.children) == 0:
+        return 1
+    else:
+        return 1 + count_tree_nodes(root.children[0]) + count_tree_nodes(root.children[1])
+
+
+def get_tree_potential_parents_accumulator(node, acc_list):
+    if len(node.children) == 0:
+        return
+    else:
+        for child in node.children:
+            if len(child.children) == 0:
+                acc_list.append(node)
+            else:
+                get_tree_potential_parents_accumulator(child, acc_list)
+
+
+def get_tree_potential_parents(tree):
+    acc_list = []
+    get_tree_potential_parents_accumulator(tree, acc_list)
+    return acc_list
+
+
+def prune_parent(root, parent):
+    if len(root.children) == 0:
+        return
+    elif root == parent:
+        root.children = []
+        return
+    else:
+        for child in root.children:
+            prune_parent(child, parent)
+
+
+def predict_post_pruning(node, node_to_treat_as_a_leaf, instance):
+    if len(node.children) == 0:
+        if node.group_a_instances == 0 or node.group_b_instances == 0:
+            predict_label = list(node.labels_split.keys())[0]
+            return predict_label
+        else:
+            return majority_of_labels_in_node(node)
+    if node == node_to_treat_as_a_leaf:
+        return majority_of_labels_in_node(node)
+    else:
+        split_attribute = node.feature
+        split_threshold = node.value
+        instance_value_of_attribute = instance[split_attribute]
+        if instance_value_of_attribute <= split_threshold:
+            predict_label = predict_post_pruning(node.children[0], node_to_treat_as_a_leaf, instance)
+            return predict_label
+        else:
+            predict_label = predict_post_pruning(node.children[1], node_to_treat_as_a_leaf, instance)
+            return predict_label
+
+
+def calc_post_pruning_accuracy(node, node_to_treat_as_a_leaf, dataset):
+    success_predictions_count = 0
+    total_instances = dataset.shape[0]
+    for instance_index in range(total_instances):
+        actual_label = dataset[instance_index][-1]
+        model_prediction = predict_post_pruning(node, node_to_treat_as_a_leaf, dataset[instance_index, :])
+        if model_prediction == actual_label:
+            success_predictions_count += 1
+    accuracy = (success_predictions_count / total_instances) * 100
+    return accuracy
+
+
+def find_best_node_to_prune(tree, potential_parents, dataset):
+    best_accuracy = 0
+    best_parent = None
+    for parent in potential_parents:
+        accuracy = calc_post_pruning_accuracy(node=tree, node_to_treat_as_a_leaf=parent, dataset=dataset)
+        if accuracy > best_accuracy:
+            best_accuracy = accuracy
+            best_parent = parent
+    return best_accuracy, best_parent
 
 
 def print_tree_acc(node, acc):

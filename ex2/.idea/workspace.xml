@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fe04b4df-8b3d-44f4-bbe3-a2f95ada74ff" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.ipynb_checkpoints/hwa2-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/.ipynb_checkpoints/hwa2-checkpoint.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hw2.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hwa2.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/hwa2.ipynb" afterDir="false" />
@@ -17,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hw2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-135">
-              <caret line="138" lean-forward="true" selection-start-line="138" selection-end-line="138" />
+            <state relative-caret-position="415">
+              <caret line="327" column="45" selection-start-line="327" selection-start-column="19" selection-end-line="327" selection-end-column="45" />
             </state>
           </provider>
         </entry>
@@ -45,6 +46,9 @@
       <find>test</find>
       <find>pred</find>
       <find>statiscit</find>
+      <find>None</find>
+      <find>set_sp</find>
+      <find>predict_as</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -108,12 +112,13 @@
       <workItem from="1553590543097" duration="12997000" />
       <workItem from="1553619818098" duration="11000" />
       <workItem from="1553628334440" duration="111000" />
-      <workItem from="1553713911463" duration="4757000" />
+      <workItem from="1553713911463" duration="4989000" />
+      <workItem from="1553843931756" duration="9128000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64609000" />
+    <option name="totallyTimeSpent" value="73969000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -157,8 +162,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/hw2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-135">
-          <caret line="138" lean-forward="true" selection-start-line="138" selection-end-line="138" />
+        <state relative-caret-position="415">
+          <caret line="327" column="45" selection-start-line="327" selection-start-column="19" selection-end-line="327" selection-end-column="45" />
         </state>
       </provider>
     </entry>
