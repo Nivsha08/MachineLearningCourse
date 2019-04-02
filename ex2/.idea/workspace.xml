@@ -4,7 +4,6 @@
     <list default="true" id="fe04b4df-8b3d-44f4-bbe3-a2f95ada74ff" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.ipynb_checkpoints/hwa2-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/.ipynb_checkpoints/hwa2-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw2.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hwa2.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/hwa2.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -18,8 +17,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hw2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="415">
-              <caret line="327" column="45" selection-start-line="327" selection-start-column="19" selection-end-line="327" selection-end-column="45" />
+            <state relative-caret-position="-555">
+              <caret line="278" lean-forward="true" selection-start-line="278" selection-end-line="278" />
             </state>
           </provider>
         </entry>
@@ -38,7 +37,6 @@
       <find>np.uni</find>
       <find>range(count</find>
       <find>chi_split</find>
-      <find>build</find>
       <find>print</find>
       <find>split_da</find>
       <find>predic</find>
@@ -49,6 +47,13 @@
       <find>None</find>
       <find>set_sp</find>
       <find>predict_as</find>
+      <find>thres</find>
+      <find>thresholds</find>
+      <find>np.uniq</find>
+      <find>calc_acc</find>
+      <find>calc_accuracy§</find>
+      <find>calc_post_pruning_accuracy</find>
+      <find>build</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -113,12 +118,16 @@
       <workItem from="1553619818098" duration="11000" />
       <workItem from="1553628334440" duration="111000" />
       <workItem from="1553713911463" duration="4989000" />
-      <workItem from="1553843931756" duration="9128000" />
+      <workItem from="1553843931756" duration="9253000" />
+      <workItem from="1554041260094" duration="130000" />
+      <workItem from="1554044948333" duration="4458000" />
+      <workItem from="1554123636068" duration="2966000" />
+      <workItem from="1554199573037" duration="653000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73969000" />
+    <option name="totallyTimeSpent" value="82301000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -162,8 +171,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/hw2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="327" column="45" selection-start-line="327" selection-start-column="19" selection-end-line="327" selection-end-column="45" />
+        <state relative-caret-position="-555">
+          <caret line="278" lean-forward="true" selection-start-line="278" selection-end-line="278" />
         </state>
       </provider>
     </entry>
