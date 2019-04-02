@@ -87,6 +87,16 @@ class DecisionNode:
 
 
 def build_thresholds_for_attribute_values(data, attribute_index):
+    """
+    Calculates the threshold values for the gain computation.
+
+    Input:
+    - data: any dataset where the last column holds the labels.
+    - attribute_index: the index which we generate thresholds for.
+
+    Returns the thresholds list.
+
+    """
     attribute_col = data[:, attribute_index]
     sorted_values = np.sort(np.unique(attribute_col))
     thresholds = []
@@ -97,6 +107,18 @@ def build_thresholds_for_attribute_values(data, attribute_index):
 
 
 def calc_weighted_average_by_attribute(data, attribute_index, threshold, impurity):
+    """
+    Calculates the weighted average of an attribute.
+
+    Input:
+        - data: any dataset where the last column holds the labels.
+        -  attribute_index: the index which we calculate the average for.
+        - threshold: the threshold value we split by.
+        - impurity: the impurity system to use.
+
+    Returns the weighted average.
+
+    """
     group_a_instances, group_b_instances, sv_a, sv_b = split_data(data, attribute_index, threshold)
     S = sv_a + sv_b
     weighted_average = ((sv_a / S) * impurity(group_a_instances)) + \
@@ -105,12 +127,33 @@ def calc_weighted_average_by_attribute(data, attribute_index, threshold, impurit
 
 
 def split_data(data, attribute_index, threshold):
+    """
+    Splits the data by a certain attribute.
+
+    Input:
+        - data: any dataset where the last column holds the labels.
+        - attribute_index: the index which we split by.
+        - threshold: the threshold value we split by.
+
+    Returns the data post split.
+
+    """
     group_a_data = data[data[:, attribute_index] <= threshold]
     group_b_data = data[data[:, attribute_index] > threshold]
     return group_a_data, group_b_data, group_a_data.shape[0], group_b_data.shape[0]
 
 
 def find_best_information_gain_params(data, impurity):
+    """
+    Finds the best information gain parameters.
+
+    Input:
+       - data: any dataset where the last column holds the labels.
+       - impurity: the impurity system to use.
+
+    Returns the best information gain, best attribute index, best threshold.
+
+    """
     current_impurity = impurity(data)
     best_information_gain = 0
     best_attribute_index = 0
@@ -128,16 +171,45 @@ def find_best_information_gain_params(data, impurity):
 
 
 def remove_attribute_column(data, attribute_index):
+    """
+    Removes an attribute column from data.
+
+    Input:
+     - data: any dataset where the last column holds the labels.
+     - attribute_index: the index to remove.
+
+    Returns data post remove.
+
+    """
     return np.delete(data, attribute_index, axis=1)
 
 
 def set_node_labels_split_information(node, data):
+    """
+    Set the node information about the labels.
+
+    Input:
+        - node: the tree node to set its labels.
+        - data: any dataset where the last column holds the labels.
+
+    """
     labels, count_of_labels = np.unique(data[:, -1], return_counts=True)
     for i in range(len(count_of_labels)):
         node.labels_split[labels[i]] = count_of_labels[i]
 
 
 def compute_chi_statistics(data, attribute_index, threshold):
+    """
+    Compute the chi square statistics.
+
+    Input:
+        - data: any dataset where the last column holds the labels.
+        - attribute_index: the index to calculate chi for.
+        - threshold: the threshold value we split by.
+
+    Returns the chi value.
+
+    """
     probability_of_label_zero = (data[data[:, data.shape[1] - 1] == 0].shape[0]) / data.shape[0]
     probability_of_label_one = 1 - probability_of_label_zero
     less_than_threshold_instances = data[data[:, attribute_index] <= threshold]
@@ -199,6 +271,15 @@ def build_tree(data, impurity, p_value):
 
 
 def majority_of_labels_in_node(node):
+    """
+    Compute the majority of labels in a node.
+
+    Input:
+        - node: the tree node to set calculate majority for.
+
+    Returns the majority value.
+
+    """
     return max(node.labels_split, key=node.labels_split.get)
 
 
@@ -208,7 +289,7 @@ def predict(node, instance):
 
     Input:
     - root: the root of the decision tree.
-    - instance: an row vector from the dataset. Note that the last element 
+    - instance: an row vector from the dataset. Note that the last element
                 of this vector is the label of the instance.
 
     Output: the prediction of the instance.
@@ -254,6 +335,14 @@ def calc_accuracy(node, dataset):
 
 
 def count_tree_nodes(root):
+    """
+    Counts the total nodes number in the tree.
+    Input:
+        - root: the tree root.
+
+    Returns the number of nodes in the tree.
+
+    """
     if len(root.children) == 0:
         return 1
     else:
@@ -261,6 +350,10 @@ def count_tree_nodes(root):
 
 
 def get_tree_potential_parents_accumulator(node, acc_list):
+    """
+        Auxiliary function for get_tree_potential_parents.
+
+    """
     if len(node.children) == 0:
         return
     else:
@@ -272,12 +365,27 @@ def get_tree_potential_parents_accumulator(node, acc_list):
 
 
 def get_tree_potential_parents(tree):
+    """
+        Get a list of parents to leaves.
+        Input:
+            - tree: the tree root.
+
+        Returns a list of parents to leaves.
+
+    """
     acc_list = []
     get_tree_potential_parents_accumulator(tree, acc_list)
     return acc_list
 
 
 def prune_parent(root, parent):
+    """
+    Sets the node to be a leaf.
+    Input:
+        - root: the tree root.
+        - parent: the node turning to leaf.
+
+    """
     if len(root.children) == 0:
         return
     elif root == parent:
@@ -289,6 +397,17 @@ def prune_parent(root, parent):
 
 
 def predict_post_pruning(node, node_to_treat_as_a_leaf, instance):
+    """
+    The predict function used for post pruning.
+    Input:
+        - node: the tree.
+        - node_to_treat_as_a_leaf: the node we decide to stop if we are at.
+        - instance: an row vector from the dataset. Note that the last element
+            of this vector is the label of the instance.
+
+    Output: the prediction of the instance.
+
+    """
     if len(node.children) == 0:
         if node.group_a_instances == 0 or node.group_b_instances == 0:
             predict_label = list(node.labels_split.keys())[0]
@@ -310,6 +429,16 @@ def predict_post_pruning(node, node_to_treat_as_a_leaf, instance):
 
 
 def calc_post_pruning_accuracy(node, node_to_treat_as_a_leaf, dataset):
+    """
+    The accuracy function used for post pruning.
+    Input:
+        - node: the tree.
+        - node_to_treat_as_a_leaf: the node we decide to stop if we are at.
+        - dataset: the dataset on which the accuracy is evaluated
+
+    Output: the accuracy of the decision tree on the given dataset (%).
+
+    """
     success_predictions_count = 0
     total_instances = dataset.shape[0]
     for instance_index in range(total_instances):
@@ -322,6 +451,16 @@ def calc_post_pruning_accuracy(node, node_to_treat_as_a_leaf, dataset):
 
 
 def find_best_node_to_prune(tree, potential_parents, dataset):
+    """
+    Find the best parent to prune.
+    Input:
+        - tree: the tree root.
+        - potential_parents: the list of parents which their sons are leaves.
+        - dataset: the dataset on which the accuracy is evaluated
+
+    Output: the best accuracy value and the best parent node.
+
+    """
     best_accuracy = 0
     best_parent = None
     for parent in potential_parents:
@@ -333,6 +472,10 @@ def find_best_node_to_prune(tree, potential_parents, dataset):
 
 
 def print_tree_acc(node, acc):
+    """
+    Auxiliary function for print_tree.
+
+    """
     node.to_string()
     if len(node.children) > 0:
         for child_node in node.children:
