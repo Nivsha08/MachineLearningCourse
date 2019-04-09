@@ -112,7 +112,7 @@ def normal_pdf(x, mean, std):
     Returns the normal distribution pdf according to the given mean and var for the given x.    
     """
     coefficient = 1 / np.sqrt(2 * np.pi * np.power(std, 2))
-    return coefficient * np.exp(-np.power((x - mean), 2) / (2 * np.power(std, 2)))
+    return coefficient * np.exp(-0.5 * np.power(((x - mean) / std), 2))
 
 
 def multi_normal_pdf(x, mean, cov):
@@ -142,7 +142,7 @@ EPSILLON = 1e-6  # == 0.000001 It could happen that a certain value will only oc
 
 # In case such a thing occur the probability for that value will EPSILLON.
 
-class DiscreteNBClassDistribution():
+class DiscreteNBClassDistribution:
     def __init__(self, dataset, class_value):
         """
         A class which computes and encapsulate the relevant probabilites for a discrete naive bayes 
@@ -152,26 +152,40 @@ class DiscreteNBClassDistribution():
         - dataset: The dataset from which to compute the probabilites (Numpy Array).
         - class_value : Compute the relevant parameters only for instances from the given class.
         """
-        pass
+        self.all_dataset = dataset
+        # Ni
+        self.class_instances = dataset[dataset[:, -1] == class_value]
+        # |Vi|
+
+    def laplace_smoothing(self, feature_index, feature_value):
+        ni = self.class_instances.shape[0]
+        feature_column = self.all_dataset[:, feature_index]
+        vj = len(np.unique(feature_column))
+        nij = self.class_instances[self.class_instances[:, feature_index] == feature_value].shape[0]
+        return (nij + 1) / (ni + vj)
 
     def get_prior(self):
         """
         Returns the prior porbability of the class according to the dataset distribution.
         """
-        return 1
+        return self.class_instances.shape[0] / self.all_dataset.shape[0]
 
     def get_instance_likelihood(self, x):
         """
         Returns the likelihhod porbability of the instance under the class according to the dataset distribution.
         """
-        return 1
+        instance_likelihood = 1
+        for i in range(x.shape[0] - 1):
+            instance_likelihood *= self.laplace_smoothing(i, x[i])
+        return instance_likelihood
 
     def get_instance_posterior(self, x):
         """
         Returns the posterior porbability of the instance under the class according to the dataset distribution.
         * Ignoring p(x)
         """
-        return 1
+        posterior = self.get_instance_likelihood(x) * self.get_prior()
+        return posterior
 
 
 ####################################################################################################
@@ -221,4 +235,6 @@ def compute_accuracy(testset, map_classifier):
         prediction = map_classifier.predict(testset[i, :])
         if prediction == testset[i, -1]:
             successful_predictions += 1
+    print("test size:", testset_size)
+    print("successful predictions", successful_predictions)
     return (successful_predictions / testset_size) * 100
