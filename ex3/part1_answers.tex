@@ -1,0 +1,166 @@
+%% LyX 2.3.2 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[oneside,english]{amsart}
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{setspace}
+\doublespacing
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% A simple dot to overcome graphicx limitations
+\newcommand{\lyxdot}{.}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+\numberwithin{equation}{section}
+\numberwithin{figure}{section}
+\newenvironment{lyxlist}[1]
+	{\begin{list}{}
+		{\settowidth{\labelwidth}{#1}
+		 \setlength{\leftmargin}{\labelwidth}
+		 \addtolength{\leftmargin}{\labelsep}
+		 \renewcommand{\makelabel}[1]{##1\hfil}}}
+	{\end{list}}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+\title{\doublespacing{}Machine Learning - Exercise 3}
+\author{Anat Balzam, Niv Shani}
+\maketitle
+\begin{doublespace}
+
+\section*{Part 1 - Probability Theory Questions}
+
+\section*{\textbf{Question 1}}
+\end{doublespace}
+
+\begin{doublespace}
+We define the following events:
+\end{doublespace}
+\begin{description}
+\begin{doublespace}
+\item [{A}] We randomly got a Goldstar from the bar.
+\item [{B}] The box that was moved from the storage to the bar was a Goldstar
+box.
+\end{doublespace}
+\end{description}
+\begin{doublespace}
+We need to calculate the probability that a Stella box was moved,
+given the fact we randomly got a Goldstar at the bar.
+
+If a box of Stella was moved to the bar, we got 6 more bottles of
+Stella at the bar. Thus the probability to randomly get a Goldstar
+changes:
+
+\[
+P(A)=\frac{15}{35+6}=\frac{15}{41}
+\]
+
+To calculate $P(A)$ we'll use the law of total probability:
+
+\[
+P(A)=P(B)P(A|B)+P(\overline{{B}})P(A|\overline{{B}})=\frac{4}{11}\cdot\frac{21}{41}+\frac{7}{11}\cdot\frac{15}{41}=0.419
+\]
+
+We need to calculate: $P(\overline{{B}}|A)$. Thus:
+
+\[
+P(\overline{{B}}|A)=\frac{{P(\overline{{B}}\cap A)}}{P(A)}=\frac{\frac{7}{11}\cdot\frac{15}{41}}{0.419}=\frac{5}{9}
+\]
+
+\end{doublespace}
+\begin{doublespace}
+
+\section*{\textbf{\newpage Question 2}}
+\end{doublespace}
+\begin{lyxlist}{00.00.0000}
+\item [{(a)}] Define \textbf{A}: the probability that a ship will be detected.\\
+Using the law of total probability we get:
+\[
+P(A)=0\cdot0.8+0.2\cdot0.7+0.3\cdot0.6+0.5\cdot0.5=0.57
+\]
+\item [{(b)}] Define \textbf{B}: the probability of a ship to be in zone
+C. Thus: $P(B)=0.3$.\\
+Using conditional probability we get:
+\[
+P(B|A)=\frac{P(B\cap A)}{P(A)}=\frac{0.3\cdot0.6}{0.57}=0.3157
+\]
+\item [{(c)}] Define \textbf{C}: the probability of a ship to be in zone
+B. Thus: \textbf{$P(C)=0.2$}.\\
+Using conditional probability we get:
+\[
+P(C|A)=\frac{P(C\cap A)}{P(A)}=\frac{0.2\cdot0.7}{0.57}=0.2456
+\]
+\end{lyxlist}
+\begin{doublespace}
+
+\section*{\textbf{\newpage Question 3}}
+\end{doublespace}
+
+\section*{\textbf{\newpage Question 4}}
+\begin{lyxlist}{00.00.0000}
+\item [{(a)}] Define a random variable \textbf{X}: the number of descent
+meals at Karnaf during a specific week.\\
+We will treat a week as a series of 5 independent experiences, with
+$p=0.7$ to get a descent meal at Karnaf.\\
+Thus:
+\[
+X\sim B(n=5,p=0.7)
+\]
+\\
+From the binomal distribution we get:
+\[
+P(X=3)={5 \choose 3}\cdot0.7^{3}\cdot0.3^{2}=0.3087
+\]
+\item [{(b)}] Using the binomial distribution again, we get:
+\[
+\begin{aligned}P(X & \geq2)=\\
+= & 1-[P(X=0)+P(X=1)]\\
+= & 1-[{5 \choose 0}\cdot0.7^{0}\cdot0.3^{5}+{5 \choose 1}\cdot0.7^{1}\cdot0.3^{4}]\\
+= & 1-[0.00243+0.02835]\\
+= & 0.96922
+\end{aligned}
+\]
+\item [{(c)}] Since there are $N\geq30$ independet samples, and the conditions
+for the CLE theorem for the binomial distribution holds, we expect
+the average to hold:
+\[
+\overline{{X_{n}}}=\frac{\sum_{i=1}^{100}x_{i}}{100}\sim B(np,np(1-p))
+\]
+\[
+\Rightarrow\overline{{X_{n}}}\sim B(70,\sqrt{21})
+\]
+\\
+Meaning we expect the average (the mean value) to be $\mu=70$
+\end{lyxlist}
+
+\section*{\textbf{\newpage Question 5}}
+\begin{lyxlist}{00.00.0000}
+\item [{(a)}] $\forall(x,y)\in D\cap C$, it holds:\\
+1. $x\geq0$\\
+2. $|x^{2}+y^{2}|\leq1$\\
+Thus, we can calculate:
+\begin{align*}
+P((x,y) & \in D\cap C|(x,y)\in C)\\
+= & \frac{P[((x,y)\in D\cap C)\cap((x,y)\in C)]}{P((x,y)\in C)}\\
+= & \frac{P(x\geq0)\cdot P(|x^{2}+y^{2}\leq1|)\cdot P(x\geq0)}{P(x\geq0)}\\
+= & P(x\geq0)\cdot P(|x^{2}+y^{2}\leq1|)\\
+= & \frac{1}{2}\cdot\pi=\frac{\pi}{2}\\
+\end{align*}
+Thus, we can treat the question as a series of independent experiences,
+with $p=\frac{\pi}{2}$ chance to success.\\
+Meaning:
+\[
+X\sim B(50,\frac{\pi}{2})
+\]
+\item [{(b)}] The CDF of X from 1 to 50:\\
+\includegraphics[width=0.8\linewidth]{\string"/Users/niv/Desktop/Screen Shot 2019-04-10 at 21.56.36\string".png}
+\end{lyxlist}
+
+\end{document}

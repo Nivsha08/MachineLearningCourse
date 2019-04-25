@@ -34,13 +34,13 @@ class NaiveNormalClassDistribution:
 
     def get_prior(self):
         """
-        Returns the prior porbability of the class according to the dataset distribution.
+        Returns the prior probability of the class according to the dataset distribution.
         """
         return self.class_instances.shape[0] / self.all_dataset.shape[0]
 
     def get_instance_likelihood(self, x):
         """
-        Returns the likelihhod porbability of the instance under the class according to the dataset distribution.
+        Returns the likelihood probability of the instance under the class according to the dataset distribution.
         """
         instance_likelihood = 1
         for i in range(x.shape[0] - 1):
@@ -49,7 +49,7 @@ class NaiveNormalClassDistribution:
 
     def get_instance_posterior(self, x):
         """
-        Returns the posterior porbability of the instance under the class according to the dataset distribution.
+        Returns the posterior probability of the instance under the class according to the dataset distribution.
         * Ignoring p(x)
         """
         return self.get_instance_likelihood(x) * self.get_prior()
@@ -58,7 +58,7 @@ class NaiveNormalClassDistribution:
 class MultiNormalClassDistribution:
     def __init__(self, dataset, class_value):
         """
-        A class which encapsulate the relevant parameters(mean, cov matrix) for a class conditinoal multi normal distribution.
+        A class which encapsulate the relevant parameters(mean, cov matrix) for a class conditional multi normal distribution.
         The mean and cov matrix (You can use np.cov for this!) will be computed from a given data set.
         
         Input
@@ -80,13 +80,13 @@ class MultiNormalClassDistribution:
 
     def get_prior(self):
         """
-        Returns the prior porbability of the class according to the dataset distribution.
+        Returns the prior probability of the class according to the dataset distribution.
         """
         return self.class_instances.shape[0] / self.all_dataset.shape[0]
 
     def get_instance_likelihood(self, x):
         """
-        Returns the likelihhod porbability of the instance under the class according to the dataset distribution.
+        Returns the likelihood probability of the instance under the class according to the dataset distribution.
         """
         mean_vector = self.calc_features_mean_vector(self.class_instances)
         cov_matrix = self.calc_features_cov_matrix(self.class_instances)
@@ -94,7 +94,7 @@ class MultiNormalClassDistribution:
 
     def get_instance_posterior(self, x):
         """
-        Returns the posterior porbability of the instance under the class according to the dataset distribution.
+        Returns the posterior probability of the instance under the class according to the dataset distribution.
         * Ignoring p(x)
         """
         return self.get_instance_likelihood(x) * self.get_prior()
@@ -102,7 +102,7 @@ class MultiNormalClassDistribution:
 
 def normal_pdf(x, mean, std):
     """
-    Calculate normal desnity function for a given x, mean and standrad deviation.
+    Calculate normal density function for a given x, mean and standard deviation.
  
     Input:
     - x: A value we want to compute the distribution for.
@@ -111,13 +111,13 @@ def normal_pdf(x, mean, std):
  
     Returns the normal distribution pdf according to the given mean and var for the given x.    
     """
-    coefficient = 1 / np.sqrt(2 * np.pi * np.power(std, 2))
-    return coefficient * np.exp(-0.5 * np.power(((x - mean) / std), 2))
+    coefficient = 1 / (std * np.sqrt(2 * np.pi))
+    return coefficient * np.exp((-1) * np.power((x - mean), 2) / (2 * np.power(std, 2)))
 
 
 def multi_normal_pdf(x, mean, cov):
     """
-    Calculate multi variante normal desnity function for a given x, mean and covarince matrix.
+    Calculate multi variant normal density function for a given x, mean and covariance matrix.
  
     Input:
     - x: A value we want to compute the distribution for.
@@ -138,41 +138,43 @@ def multi_normal_pdf(x, mean, cov):
 #                                            Part B
 ####################################################################################################
 EPSILLON = 1e-6  # == 0.000001 It could happen that a certain value will only occur in the test set.
-
-
 # In case such a thing occur the probability for that value will EPSILLON.
+
 
 class DiscreteNBClassDistribution:
     def __init__(self, dataset, class_value):
         """
-        A class which computes and encapsulate the relevant probabilites for a discrete naive bayes 
-        distribution for a specific class. The probabilites are computed with la place smoothing.
+        A class which computes and encapsulate the relevant probabilities for a discrete naive bayes
+        distribution for a specific class. The probabilities are computed with la place smoothing.
         
         Input
-        - dataset: The dataset from which to compute the probabilites (Numpy Array).
+        - dataset: The dataset from which to compute the probabilities (Numpy Array).
         - class_value : Compute the relevant parameters only for instances from the given class.
         """
         self.all_dataset = dataset
-        # Ni
         self.class_instances = dataset[dataset[:, -1] == class_value]
-        # |Vi|
 
     def laplace_smoothing(self, feature_index, feature_value):
         ni = self.class_instances.shape[0]
-        feature_column = self.all_dataset[:, feature_index]
-        vj = len(np.unique(feature_column))
         nij = self.class_instances[self.class_instances[:, feature_index] == feature_value].shape[0]
-        return (nij + 1) / (ni + vj)
+        feature_column = self.all_dataset[:, feature_index]
+        unique_values = np.unique(feature_column)
+        vj = len(unique_values)
+        if feature_value in unique_values:
+            probability = (nij + 1) / (ni + vj)
+        else:
+            probability = EPSILLON
+        return probability
 
     def get_prior(self):
         """
-        Returns the prior porbability of the class according to the dataset distribution.
+        Returns the prior probability of the class according to the dataset distribution.
         """
         return self.class_instances.shape[0] / self.all_dataset.shape[0]
 
     def get_instance_likelihood(self, x):
         """
-        Returns the likelihhod porbability of the instance under the class according to the dataset distribution.
+        Returns the likelihood probability of the instance under the class according to the dataset distribution.
         """
         instance_likelihood = 1
         for i in range(x.shape[0] - 1):
@@ -181,7 +183,7 @@ class DiscreteNBClassDistribution:
 
     def get_instance_posterior(self, x):
         """
-        Returns the posterior porbability of the instance under the class according to the dataset distribution.
+        Returns the posterior probability of the instance under the class according to the dataset distribution.
         * Ignoring p(x)
         """
         posterior = self.get_instance_likelihood(x) * self.get_prior()
@@ -194,13 +196,13 @@ class DiscreteNBClassDistribution:
 class MAPClassifier:
     def __init__(self, ccd0, ccd1):
         """
-        A Maximum a postreiori classifier. 
+        A Maximum a postriori classifier.
         This class will hold 2 class distribution, one for class 0 and one for class 1, and will predicit and instance
         by the class that outputs the highest posterior probability for the given instance.
     
         Input
-            - ccd0 : An object contating the relevant parameters and methods for the distribution of class 0.
-            - ccd1 : An object contating the relevant parameters and methods for the distribution of class 1.
+            - ccd0 : An object containing the relevant parameters and methods for the distribution of class 0.
+            - ccd1 : An object containing the relevant parameters and methods for the distribution of class 1.
         """
         self.ccd0 = ccd0
         self.ccd1 = ccd1
@@ -224,7 +226,7 @@ def compute_accuracy(testset, map_classifier):
     
     Input
         - testset: The test for which to compute the accuracy (Numpy array).
-        - map_classifier : A MAPClassifier object capable of prediciting the class for each instance in the testset.
+        - map_classifier : A MAPClassifier object capable of predicting the class for each instance in the testset.
         
     Ouput
         - Accuracy = #Correctly Classified / #testset size
