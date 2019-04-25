@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 PLOT_WIDTH_IN_SIGMA = 3
 
 
-# code for ploting the original distribution with the one that we found with the EM
+# code for plotting the original distribution with the one that we found with the EM
 def plot_pred_vs_actual(df):
     plt.figure(figsize=(10, 7))
     mu_hat1 = df['x'][df['z'] == 0].mean()
@@ -50,16 +50,7 @@ def plot_pred_vs_actual(df):
 
 
 def get_num_of_gaussians():
-    k = None
-
-    ###########################################################################
-    # TODO: Implement the function.                                           #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
-
+    k = 4
     return k
 
 
@@ -69,18 +60,32 @@ def init(points_list, k):
     :param k: number of gaussians. type: integer.
     :return the initial guess of w, mu, sigma. types: array
     """
-    w = np.array([0.0])
-    mu = np.array([0.0])
-    sigma = np.array([0.0])
-    ###########################################################################
-    # TODO: Implement the function. compute init values for w, mu, sigma.     #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    w = []
+    mu = []
+    sigma = []
+
+    x_min = np.min(points_list)
+    x_max = np.max(points_list)
+    sorted_list = np.sort(points_list)
+    step = (x_max - x_min + 1) / k
+    i = x_min
+    while i <= x_max:
+        x_segment = np.array(list(filter(lambda x: (i < x < i + step), sorted_list)))
+        mu.append(np.mean(x_segment))
+        sigma.append(np.std(x_segment))
+        w.append(1/k)
+        i += step
+
+    w = np.array(w)
+    mu = np.array(mu)
+    sigma = np.array(sigma)
 
     return w, mu, sigma
+
+
+def normal_pdf(x, mean, std):
+    coefficient = 1 / (std * np.sqrt(2 * np.pi))
+    return coefficient * np.exp((-1) * np.power((x - mean), 2) / (2 * np.power(std, 2)))
 
 
 def expectation(points_list, mu, sigma, w):
@@ -91,21 +96,20 @@ def expectation(points_list, mu, sigma, w):
     :param w: weight of each gaussian. type: array
     :return likelihood: dividend of ranks matrix (likelihood). likelihood[i][j] is the likelihood of point i to belong to gaussian j. type: array
     """
-    likelihood = np.array([0.0])
-    ###########################################################################
-    # TODO: Implement the function. compute likelihood array                  #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    likelihood = []
 
-    return likelihood
+    # Wk * N(x | muK, sigmaK)
+
+    for point in points_list:
+        current_gaussian_likelihood_list = []
+        for i in range(len(w)):
+            current_gaussian_likelihood_list.append(w[i] * norm.pdf(point, mu[i], sigma[i]))
+        likelihood.append(current_gaussian_likelihood_list)
+    return np.array(likelihood)
 
 
 def maximization(points_list, ranks):
     """
-    # :param data: the complete data
     :param points_list: the entire data set of points. type: list.
 
     :param ranks: ranks matrix- r(x,k)- responsibility of each data point x to gaussian k
