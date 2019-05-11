@@ -48,17 +48,25 @@ def get_stats(prediction, labels):
              accuracy: accuracy of the model given the predictions
     """
 
-    tpr = 0.0
-    fpr = 0.0
-    accuracy = 0.0
+    num_of_labels = labels.shape[0]
+    positives = count_nonzero(labels, axis=0)
+    negatives = num_of_labels - positives
 
-    ###########################################################################
-    # TODO: Implement the function                                            #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    tp_counter = 0
+    fp_counter = 0
+    success_counter = 0
+
+    for i in range(num_of_labels):
+        if prediction[i] == labels[i]:
+            success_counter += 1
+        if prediction[i] == 1 and labels[i] == 1:
+            tp_counter += 1
+        elif prediction[i] == 1 and labels[i] == 0:
+            fp_counter += 1
+
+    tpr = tp_counter / positives
+    fpr = fp_counter / negatives
+    accuracy = success_counter / num_of_labels
 
     return tpr, fpr, accuracy
 
@@ -74,13 +82,27 @@ def get_k_fold_stats(folds_array, labels_array, clf):
     fpr = []
     accuracy = []
 
-    ###########################################################################
-    # TODO: Implement the function                                            #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    k = len(folds_array)
+
+    # choose a different testset from the k arrays, and treat the rest as trainset
+    # combine the arrays with the their labels columns
+    for i in range(k):
+        test_labels_array = labels_array[i]
+        testset_array = folds_array[i]
+
+        train_labels_array = concatenate([sub_array for j, sub_array in enumerate(labels_array) if j != i], axis=0)
+        trainset_array = concatenate([sub_array for j, sub_array in enumerate(folds_array) if j != i], axis=0)
+
+        clf.fit(trainset_array, train_labels_array)
+
+        # get prediction from the SVC learner
+        predicted_labels = clf.predict(testset_array)
+
+        # get model stats and append them to the lists
+        tpr_stats, fpr_stats, accuracy_stats = get_stats(predicted_labels, test_labels_array)
+        tpr.append(tpr_stats)
+        fpr.append(fpr_stats)
+        accuracy.append(accuracy_stats)
 
     return mean(tpr), mean(fpr), mean(accuracy)
 
@@ -105,13 +127,29 @@ def compare_svms(data_array,
     svm_df['fpr'] = None
     svm_df['accuracy'] = None
 
-    ###########################################################################
-    # TODO: Implement the function                                            #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    tpr_list = []
+    fpr_list = []
+    accuracy_list = []
+
+    for i in range(len(kernels_list)):
+        if kernels_list[i] == 'poly':
+            clf = SVC(kernel=kernels_list[i], degree=kernel_params[i]['degree'], gamma='auto')
+        else:
+            clf = SVC(kernel=kernels_list[i], gamma=kernel_params[i]['gamma'])
+
+        folds_array = array_split(data_array, folds_count)
+        labels_folds_array = array_split(labels_array, folds_count)
+
+        tpr, fpr, accuracy = get_k_fold_stats(folds_array, labels_folds_array, clf)
+        tpr_list.append(tpr)
+        fpr_list.append(fpr)
+        accuracy_list.append(accuracy)
+
+    svm_df['tpr'] = tpr_list
+    svm_df['fpr'] = fpr_list
+    svm_df['accuracy'] = accuracy_list
+
+    print(svm_df)
 
     return svm_df
 
@@ -140,14 +178,17 @@ def plot_roc_curve_with_score(df, alpha_slope=1.5):
     """
     x = df.fpr.tolist()
     y = df.tpr.tolist()
+    b, m = polyfit(x, y, 1)
 
-    ###########################################################################
-    # TODO: Implement the function                                            #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    line = []
+    for i in x:
+        line.append(b + alpha_slope * i)
+
+    print(line)
+    plt.title("ROC Scutter Plot")
+    plt.scatter(x, y)
+    plt.plot(x, line, '-r')
+    plt.show()
 
 
 def evaluate_c_param(data_array, labels_array, folds_count):
