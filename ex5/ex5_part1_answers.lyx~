@@ -1,0 +1,751 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass amsart
+\use_default_options true
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+\end_modules
+\maintain_unincluded_children false
+\begin_local_layout
+InsetLayout Flex:highlight
+    LyxType               custom
+    LabelString           hl
+    LatexType             command
+    LatexName             hl
+    Font
+      Series              Bold
+    EndFont
+    Preamble
+    \usepackage{xcolor}
+    \usepackage{soul}
+    \colorlet{highlightgreen}{green!10}
+    \colorlet{highlightgray}{gray!20}
+    \sethlcolor{highlightgreen} 
+    EndPreamble
+    InToc                 false
+    HTMLTag               strong
+    ResetsFont true
+End
+\end_local_layout
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing double
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+\paragraph_spacing double
+\noindent
+Machine Learning - Exercise 3 - Part 1
+\end_layout
+
+\begin_layout Section*
+Anat Balzam, Niv Shani
+\end_layout
+
+\begin_layout Section*
+\paragraph_spacing double
+\noindent
+
+\series bold
+Question 1
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+\noindent
+We define the following events:
+\end_layout
+
+\begin_layout Description
+\paragraph_spacing double
+\noindent
+A We randomly got a Goldstar from the bar.
+\end_layout
+
+\begin_layout Description
+\paragraph_spacing double
+\noindent
+B The box that was moved from the storage to the bar was a Goldstar box.
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+\noindent
+We need to calculate the probability that a Stella box was moved, given
+ the fact we randomly got a Goldstar at the bar.
+ If a box of Stella was moved to the bar, we got 6 more bottles of Stella
+ at the bar.
+ Thus the probability to randomly get a Goldstar changes:
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+\noindent
+\begin_inset Formula 
+\[
+P(A)=\frac{15}{35+6}=\frac{15}{41}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+\noindent
+To calculate 
+\begin_inset Formula $P(A)$
+\end_inset
+
+ we will use the law of total probability:
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+\noindent
+\begin_inset Formula 
+\[
+P(A)=P(B)P(A|B)+P(\overline{{B}})P(A|\overline{{B}})=\frac{4}{11}\cdot\frac{21}{41}+\frac{7}{11}\cdot\frac{15}{41}=0.419
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+\noindent
+We need to calculate: 
+\begin_inset Formula $P(\overline{{B}}|A)$
+\end_inset
+
+.
+ Thus:
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+\noindent
+\begin_inset Formula 
+\[
+P(\overline{{B}}|A)=\frac{{P(\overline{{B}}\cap A)}}{P(A)}=\frac{\frac{7}{11}\cdot\frac{15}{41}}{0.419}=\frac{5}{9}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+\paragraph_spacing double
+\noindent
+
+\series bold
+\begin_inset Newpage newpage
+\end_inset
+
+Question 2
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+(a) Define 
+\series bold
+A
+\series default
+: the probability that a ship will be detected.
+\begin_inset Newline newline
+\end_inset
+
+Using the law of total probability we get:
+\begin_inset Formula 
+\[
+P(A)=0\cdot0.8+0.2\cdot0.7+0.3\cdot0.6+0.5\cdot0.5=0.57
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+(b) Define 
+\series bold
+B
+\series default
+: the probability of a ship to be in zone C.
+ Thus: 
+\begin_inset Formula $P(B)=0.3$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Using conditional probability we get:
+\begin_inset Formula 
+\[
+P(B|A)=\frac{P(B\cap A)}{P(A)}=\frac{0.3\cdot0.6}{0.57}=0.3157
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+(c) Define 
+\series bold
+C
+\series default
+: the probability of a ship to be in zone B.
+ Thus: 
+\series bold
+
+\begin_inset Formula $P(C)=0.2$
+\end_inset
+
+
+\series default
+.
+\begin_inset Newline newline
+\end_inset
+
+Using conditional probability we get:
+\begin_inset Formula 
+\[
+P(C|A)=\frac{P(C\cap A)}{P(A)}=\frac{0.2\cdot0.7}{0.57}=0.2456
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+\paragraph_spacing double
+\noindent
+
+\series bold
+\begin_inset Newpage newpage
+\end_inset
+
+Question 3
+\end_layout
+
+\begin_layout Standard
+We can look at the following situation:
+\begin_inset Newline newline
+\end_inset
+
+We have 10 balls in a sack: 7 red balls, and 3 yellow balls.
+ We toss a fair coin once:
+\end_layout
+
+\begin_layout Itemize
+If the result is H, we choose a random ball, return it to the sack, and
+ then choose another random ball.
+\end_layout
+
+\begin_layout Itemize
+If the result is T, we choose a random ball, and then choose another random
+ ball (without returning the first one).
+\end_layout
+
+\begin_layout Standard
+Define the following indicator random variables:
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align left
+\begin_inset Formula 
+\[
+X=\begin{cases}
+1 & \text{\mbox{red ball on the first pull}}\\
+0 & \mbox{else}
+\end{cases}\quad Y=\begin{cases}
+1 & \mbox{red ball on the second pull}\\
+0 & \mbox{else}
+\end{cases}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+C=\begin{cases}
+1 & \mbox{the coin showed H}\\
+0 & \mbox{else}
+\end{cases}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Therefore, the conditions hold:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+(a) 
+\begin_inset Formula $X\perp Y|C:$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+0.49=\frac{0.7\cdot0.7\cdot0.5}{0.5} & =\frac{P(X=1,Y=1,C=1)}{P(C=1)}=P(X=1,Y=1|C=1)\\
+= & P(X=1|C=1)\cdot P(Y=1|C=1)\\
+= & \frac{P(X=1,C=1)}{P(C=1)}\cdot\frac{P(Y=1,C=1)}{P(C=1)}=\frac{0.7\cdot0.5}{0.5}\cdot\frac{0.7\cdot0.5}{0.5}=0.49
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+(b) 
+\begin_inset Formula $X\not\perp Y:$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{6}{9}=\frac{0.7\cdot\frac{6}{9}}{(0.7\cdot0.7+0.3\cdot0.7)}=\frac{P(X=1,Y=1)}{P(Y=1)}=P(X=1|Y=1)\not=P(X=1)=0.7
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+newline
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+newline
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+(c) 
+\begin_inset Formula $X,Y,C$
+\end_inset
+
+ are binary random variables - since they are indicators
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+(d) 
+\begin_inset Formula $X\sim B(1,0.7)\Rightarrow P(X=0)=1-0.7=0.3$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $Y\sim B(1,0.7)\Rightarrow P(Y=0)=1-0.7=0.3$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $C\sim B(1,0.5)\Rightarrow P(X=0)=0.5$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+newline
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Calculating the 8 combinations for 
+\begin_inset Formula $X,Y,C$
+\end_inset
+
+ values we get:
+\begin_inset Formula 
+\[
+P(X=0,Y=0,C=0)=0.5\cdot0.3\cdot\frac{2}{9}=\frac{1}{30}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+P(X=0,Y=0,C=1)=0.5\cdot0.3\cdot0.3=\frac{9}{200}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+P(X=0,Y=1,C=0)=0.5\cdot0.3\cdot\frac{7}{9}=\frac{7}{60}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+P(X=0,Y=1,C=1)=0.5\cdot0.3\cdot0.7=\frac{21}{200}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+P(X=1,Y=0,C=0)=0.5\cdot0.7\cdot\frac{3}{9}=\frac{7}{60}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+P(X=1,Y=0,C=1)=0.5\cdot0.7\cdot0.3=\frac{21}{200}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+P(X=1,Y=1,C=0)=0.5\cdot0.7\cdot\frac{6}{9}=\frac{7}{30}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+P(X=1,Y=1,C=1)=0.5\cdot0.7\cdot0.7=\frac{49}{200}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+
+\series bold
+\begin_inset Newpage newpage
+\end_inset
+
+Question 4
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+(a) Define a random variable 
+\series bold
+X
+\series default
+: the number of descent meals at Karnaf during a specific week.
+\begin_inset Newline newline
+\end_inset
+
+We will treat a week as a series of 5 independent experiences, with 
+\begin_inset Formula $p=0.7$
+\end_inset
+
+ to get a descent meal at Karnaf.
+\begin_inset Newline newline
+\end_inset
+
+Thus:
+\begin_inset Formula 
+\[
+X\sim B(n=5,p=0.7)
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+From the binomal distribution we get:
+\begin_inset Formula 
+\[
+P(X=3)={5 \choose 3}\cdot0.7^{3}\cdot0.3^{2}=0.3087
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+(b) Using the binomial distribution again, we get:
+\begin_inset Formula 
+\[
+\begin{aligned}P(X & \geq2)=\\
+= & 1-[P(X=0)+P(X=1)]\\
+= & 1-[{5 \choose 0}\cdot0.7^{0}\cdot0.3^{5}+{5 \choose 1}\cdot0.7^{1}\cdot0.3^{4}]\\
+= & 1-[0.00243+0.02835]\\
+= & 0.96922
+\end{aligned}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+(c) Since there are 
+\begin_inset Formula $N\geq30$
+\end_inset
+
+ independet samples, and the conditions for the CLE theorem for the binomial
+ distribution holds, we expect the average to hold:
+\begin_inset Formula 
+\[
+\overline{{X_{n}}}=\frac{\sum_{i=1}^{100}x_{i}}{100}\sim B(np,np(1-p))
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Rightarrow\overline{{X_{n}}}\sim B(70,\sqrt{21})
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Meaning we expect the average (the mean value) to be 
+\begin_inset Formula $\mu=70$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+
+\series bold
+\begin_inset Newpage newpage
+\end_inset
+
+Question 5
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+(a) 
+\begin_inset Formula $\forall(x,y)\in D\cap C$
+\end_inset
+
+, it holds:
+\begin_inset Newline newline
+\end_inset
+
+1.
+ 
+\begin_inset Formula $x\geq0$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+2.
+ 
+\begin_inset Formula $|x^{2}+y^{2}|\leq1$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Thus, we can calculate:
+\begin_inset Formula 
+\begin{align*}
+P((x,y) & \in D\cap C|(x,y)\in C)\\
+= & \frac{P[((x,y)\in D\cap C)\cap((x,y)\in C)]}{P((x,y)\in C)}\\
+= & \frac{P(x\geq0)\cdot P(|x^{2}+y^{2}\leq1|)\cdot P(x\geq0)}{P(x\geq0)}\\
+= & P(x\geq0)\cdot P(|x^{2}+y^{2}\leq1|)\\
+= & \frac{1}{2}\cdot\pi=\frac{\pi}{2}\\
+\end{align*}
+
+\end_inset
+
+Thus, we can treat the question as a series of independent experiences,
+ with 
+\begin_inset Formula $p=\frac{\pi}{2}$
+\end_inset
+
+ chance to success.
+\begin_inset Newline newline
+\end_inset
+
+Meaning:
+\begin_inset Formula 
+\[
+X\sim B(50,\frac{\pi}{2})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+(b) The CDF of X from 1 to 50:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename x_cdf_part1_q5.png
+	width 80line%
+	rotateOrigin center
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

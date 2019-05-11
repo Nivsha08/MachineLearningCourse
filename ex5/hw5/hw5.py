@@ -15,7 +15,7 @@ def prepare_data(data, labels, max_count=None, train_ratio=0.8):
     """
     :param data: a numpy array with the features dataset
     :param labels:  a numpy array with the labels
-    :param max_count: max amout of samples to work on. can be used for testing
+    :param max_count: max amount of samples to work on. can be used for testing
     :param train_ratio: ratio of samples used for train
     :return: train_data: a numpy array with the features dataset - for train
              train_labels: a numpy array with the labels - for train
@@ -26,18 +26,15 @@ def prepare_data(data, labels, max_count=None, train_ratio=0.8):
         data = data[:max_count]
         labels = labels[:max_count]
 
-    train_data = array([])
-    train_labels = array([])
-    test_data = array([])
-    test_labels = array([])
+    # shuffle the dataset
+    shuffled_dataset = permutation(concatenate((data, labels[:, None]), axis=1))
 
-    ###########################################################################
-    # TODO: Implement the function                                            #
-    ###########################################################################
-    pass
-    ###########################################################################
-    #                             END OF YOUR CODE                            #
-    ###########################################################################
+    train_samples = round(train_ratio * max_count)
+
+    train_data = shuffled_dataset[:train_samples, :-1]
+    train_labels = shuffled_dataset[:train_samples, -1]
+    test_data = shuffled_dataset[train_samples:, :-1]
+    test_labels = shuffled_dataset[train_samples:, -1]
 
     return train_data, train_labels, test_data, test_labels
 
