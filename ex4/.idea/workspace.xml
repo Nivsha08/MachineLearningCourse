@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c4737eae-d1aa-4c89-9287-256021027bc1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.ipynb_checkpoints/Exercise 4 - EM-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/.ipynb_checkpoints/Exercise 4 - EM-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exercise 4 - EM.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise 4 - EM.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw4/hw4.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw4/hw4.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ex5/Exercise 5 - SVM.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../ex5/Exercise 5 - SVM.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,7 +16,7 @@
         <entry file="file://$PROJECT_DIR$/hw4/hw4.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="335">
-              <caret line="75" column="21" lean-forward="true" selection-start-line="75" selection-start-column="21" selection-end-line="75" selection-end-column="21" />
+              <caret line="75" column="21" selection-start-line="75" selection-start-column="21" selection-end-line="75" selection-end-column="21" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -68,25 +65,7 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="ex4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ex4" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ex4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ex4" type="462c0819:PsiDirectoryNode" />
-              <item name="hw4" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -125,11 +104,12 @@
       <updated>1556182334437</updated>
       <workItem from="1556182335602" duration="9576000" />
       <workItem from="1556527024393" duration="586000" />
+      <workItem from="1557563436552" duration="17000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10162000" />
+    <option name="totallyTimeSpent" value="10179000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -164,7 +144,7 @@
     <entry file="file://$PROJECT_DIR$/hw4/hw4.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="335">
-          <caret line="75" column="21" lean-forward="true" selection-start-line="75" selection-start-column="21" selection-end-line="75" selection-end-column="21" />
+          <caret line="75" column="21" selection-start-line="75" selection-start-column="21" selection-end-line="75" selection-end-column="21" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
