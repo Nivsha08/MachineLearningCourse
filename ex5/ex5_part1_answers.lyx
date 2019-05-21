@@ -4,7 +4,7 @@
 \begin_header
 \save_transient_properties true
 \origin unavailable
-\textclass amsart
+\textclass scrartcl
 \use_default_options true
 \begin_modules
 theorems-ams
@@ -121,94 +121,6 @@ Anat Balzam, Niv Shani
 Question 1
 \end_layout
 
-\begin_layout Standard
-\paragraph_spacing double
-\noindent
-We define the following events:
-\end_layout
-
-\begin_layout Description
-\paragraph_spacing double
-\noindent
-A We randomly got a Goldstar from the bar.
-\end_layout
-
-\begin_layout Description
-\paragraph_spacing double
-\noindent
-B The box that was moved from the storage to the bar was a Goldstar box.
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing double
-\noindent
-We need to calculate the probability that a Stella box was moved, given
- the fact we randomly got a Goldstar at the bar.
- If a box of Stella was moved to the bar, we got 6 more bottles of Stella
- at the bar.
- Thus the probability to randomly get a Goldstar changes:
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing double
-\noindent
-\begin_inset Formula 
-\[
-P(A)=\frac{15}{35+6}=\frac{15}{41}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing double
-\noindent
-To calculate 
-\begin_inset Formula $P(A)$
-\end_inset
-
- we will use the law of total probability:
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing double
-\noindent
-\begin_inset Formula 
-\[
-P(A)=P(B)P(A|B)+P(\overline{{B}})P(A|\overline{{B}})=\frac{4}{11}\cdot\frac{21}{41}+\frac{7}{11}\cdot\frac{15}{41}=0.419
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing double
-\noindent
-We need to calculate: 
-\begin_inset Formula $P(\overline{{B}}|A)$
-\end_inset
-
-.
- Thus:
-\end_layout
-
-\begin_layout Standard
-\paragraph_spacing double
-\noindent
-\begin_inset Formula 
-\[
-P(\overline{{B}}|A)=\frac{{P(\overline{{B}}\cap A)}}{P(A)}=\frac{\frac{7}{11}\cdot\frac{15}{41}}{0.419}=\frac{5}{9}
-\]
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Section*
 \paragraph_spacing double
 \noindent
@@ -220,20 +132,73 @@ P(\overline{{B}}|A)=\frac{{P(\overline{{B}}\cap A)}}{P(A)}=\frac{\frac{7}{11}\cd
 Question 2
 \end_layout
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-(a) Define 
+\begin_layout Standard
+
 \series bold
-A
+(a)
 \series default
-: the probability that a ship will be detected.
+ Let 
+\begin_inset Formula $x,y$
+\end_inset
+
+ be two vectors in dimensions 
+\begin_inset Formula $m_{1},m_{2}$
+\end_inset
+
+ respectively, and assume 
+\begin_inset Formula $\phi_{1,}\phi_{2}$
+\end_inset
+
+ are mappings to dimensions 
+\begin_inset Formula $n_{1},n_{2}$
+\end_inset
+
+ respectively.
 \begin_inset Newline newline
 \end_inset
 
-Using the law of total probability we get:
+Hence we got:
 \begin_inset Formula 
 \[
-P(A)=0\cdot0.8+0.2\cdot0.7+0.3\cdot0.6+0.5\cdot0.5=0.57
+K_{1}(x,y)=\phi_{1}(x)\cdot\phi_{1}(y)=\mathop{\sum_{i=1}^{n_{1}}\phi_{1}(x)_{i}\cdot\phi_{1}(y)_{i}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+K_{2}(x,y)=\phi_{2}(x)\cdot\phi_{2}(y)=\mathop{\sum_{i=1}^{n_{2}}\phi_{2}(x)_{i}\cdot\phi_{2}(y)_{i}}
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Observe 
+\begin_inset Formula $K(x,y)$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{eqnarray*}
+ & = & 7K_{1}(x,y)+3K_{2}(x,y)\\
+ & = & 7\left[\sum_{i=1}^{n_{1}}\phi_{1}(x)_{i}\cdot\phi_{1}(y)_{i}\right]+3\left[\sum_{i=1}^{n_{2}}\phi_{2}(x)_{i}\cdot\phi_{2}(y)_{i}\right]\\
+ & = & 7\left[\text{\ensuremath{\phi_{1}(x)_{1}\cdot\phi_{1}(y)_{1}+\ldots+\phi_{1}(x)_{n_{1}}\cdot\phi_{1}(y)_{n_{1}}}}\right]+3\left[\phi_{2}(x)_{1}\cdot\phi_{2}(y)_{1}+\ldots+\phi_{2}(x)_{n_{2}}\cdot\phi_{2}(y)_{n_{2}}\right]
+\end{eqnarray*}
+
+\end_inset
+
+Setting 
+\begin_inset Formula $\phi(x)=(\sqrt{7}\phi_{1}(x)_{1},\ldots,\sqrt{7}\phi_{1}(x)_{n_{1}},\sqrt{3}\phi_{2}(x)_{1},\ldots,\sqrt{3}\phi_{2}(x)_{n_{2}})$
+\end_inset
+
+ we get that the above expression is exactly:
+\begin_inset Formula 
+\[
+=\phi(x)\cdot\phi(y)
 \]
 
 \end_inset
@@ -241,60 +206,12 @@ P(A)=0\cdot0.8+0.2\cdot0.7+0.3\cdot0.6+0.5\cdot0.5=0.57
 
 \end_layout
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-(b) Define 
-\series bold
-B
-\series default
-: the probability of a ship to be in zone C.
- Thus: 
-\begin_inset Formula $P(B)=0.3$
+\begin_layout Standard
+Meaning, 
+\begin_inset Formula $K(x,y)$
 \end_inset
 
-.
-\begin_inset Newline newline
-\end_inset
-
-Using conditional probability we get:
-\begin_inset Formula 
-\[
-P(B|A)=\frac{P(B\cap A)}{P(A)}=\frac{0.3\cdot0.6}{0.57}=0.3157
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-(c) Define 
-\series bold
-C
-\series default
-: the probability of a ship to be in zone B.
- Thus: 
-\series bold
-
-\begin_inset Formula $P(C)=0.2$
-\end_inset
-
-
-\series default
-.
-\begin_inset Newline newline
-\end_inset
-
-Using conditional probability we get:
-\begin_inset Formula 
-\[
-P(C|A)=\frac{P(C\cap A)}{P(A)}=\frac{0.2\cdot0.7}{0.57}=0.2456
-\]
-
-\end_inset
-
-
+ is a inner product, hence a kernel function.
 \end_layout
 
 \begin_layout Section*

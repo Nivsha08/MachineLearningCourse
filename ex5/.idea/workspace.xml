@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="229f4ec6-740d-4021-a470-8e43ffd16cc9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../ex4/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ex4/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.ipynb_checkpoints/Exercise 5 - SVM-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/.ipynb_checkpoints/Exercise 5 - SVM-checkpoint.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Exercise 5 - SVM.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Exercise 5 - SVM.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw5/hw5.py" beforeDir="false" afterPath="$PROJECT_DIR$/hw5/hw5.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ex5_part1_answers.lyx" beforeDir="false" afterPath="$PROJECT_DIR$/ex5_part1_answers.lyx" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,8 +17,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hw5/hw5.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="259" column="35" lean-forward="true" selection-start-line="259" selection-start-column="35" selection-end-line="259" selection-end-column="35" />
+            <state relative-caret-position="-1917">
+              <caret line="24" column="31" lean-forward="true" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
               <folding>
                 <element signature="e#0#112#0" expanded="true" />
               </folding>
@@ -101,11 +99,12 @@
       <workItem from="1557773885092" duration="4642000" />
       <workItem from="1557842804360" duration="9328000" />
       <workItem from="1558331880377" duration="1754000" />
+      <workItem from="1558355904391" duration="1570000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27047000" />
+    <option name="totallyTimeSpent" value="28617000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -146,8 +145,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hw5/hw5.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="259" column="35" lean-forward="true" selection-start-line="259" selection-start-column="35" selection-end-line="259" selection-end-column="35" />
+        <state relative-caret-position="-1917">
+          <caret line="24" column="31" lean-forward="true" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
           <folding>
             <element signature="e#0#112#0" expanded="true" />
           </folding>

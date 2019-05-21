@@ -155,18 +155,22 @@ def compare_svms(data_array,
     return svm_df
 
 
-def get_most_accurate_kernel():
+def get_most_accurate_kernel(result_dataframe):
     """
     :return: integer representing the row number of the most accurate kernel
     """
-    return 5
+    accuracies_col = list(result_dataframe['accuracy'])
+    best_accuracy = max(accuracies_col)
+    return accuracies_col.index(best_accuracy)
 
 
-def get_kernel_with_highest_score():
+def get_kernel_with_highest_score(result_dataframe):
     """
     :return: integer representing the row number of the kernel with the highest score
     """
-    return 5
+    scores_col = list(result_dataframe['score'])
+    best_score = max(scores_col)
+    return scores_col.index(best_score)
 
 
 def plot_roc_curve_with_score(df, alpha_slope=ALPHA):
@@ -187,7 +191,7 @@ def plot_roc_curve_with_score(df, alpha_slope=ALPHA):
     plt.scatter(x, y)
 
     # find the best kernel point
-    best_kernel_index = get_kernel_with_highest_score()
+    best_kernel_index = get_kernel_with_highest_score(df)
     best_kernel_x = df.fpr.tolist()[best_kernel_index]
     best_kernel_y = df.tpr.tolist()[best_kernel_index]
 
@@ -202,24 +206,32 @@ def plot_roc_curve_with_score(df, alpha_slope=ALPHA):
     plt.show()
 
 
-def create_best_kernel_params(i_options, j_options):
+def create_best_kernel_params(result_dataframe, i_options, j_options):
     """
     Dynamically build the kernel list and kernel params of the different possible C values.
+    :param result_dataframe: the dataframe contains all kernel's stats, in order to get the best kernel
     :param i_options: possible i's
     :param j_options: possible j's
     :return: list of kernels and params
     """
-    num_of_combinations = len(i_options) * len(j_options)
-    kernels_list = ['rbf'] * num_of_combinations
+    # get the best kernel parameters
+    best_kernel_index = get_kernel_with_highest_score(result_dataframe)
+    best_kernel_type = result_dataframe.kernel.tolist()[best_kernel_index]
+    best_kernel_params = result_dataframe.kernel_params.tolist()[best_kernel_index]
+
+    kernels_list = []
     kernel_params_list = []
     for i in i_options:
         for j in j_options:
             c = (10 ** i) * (j / 3)
-            kernel_params_list.append({'gamma': 0.5, 'C': c})
+            current_params = best_kernel_params.copy()
+            current_params['C'] = c
+            kernels_list.append(best_kernel_type)
+            kernel_params_list.append(current_params)
     return kernels_list, kernel_params_list
 
 
-def evaluate_c_param(data_array, labels_array, folds_count):
+def evaluate_c_param(result_dataframe, data_array, labels_array, folds_count):
     """
     :param data_array: a numpy array with the features dataset
     :param labels_array: a numpy array with the labels
@@ -230,7 +242,7 @@ def evaluate_c_param(data_array, labels_array, folds_count):
     i_options = [1, 0, -1, -2, -3, -4]
     j_options = [3, 2, 1]
 
-    kernel_list, kernel_params = create_best_kernel_params(i_options, j_options)
+    kernel_list, kernel_params = create_best_kernel_params(result_dataframe, i_options, j_options)
 
     res = compare_svms(data_array, labels_array, folds_count,
                        kernels_list=kernel_list,
@@ -238,7 +250,20 @@ def evaluate_c_param(data_array, labels_array, folds_count):
     return res
 
 
-def get_test_set_performance(train_data, train_labels, test_data, test_labels):
+def get_best_kernel_and_c_params(result_dataframe):
+    """
+    Dynamically choose the best C value and kernel params based on the dataframe
+    :param result_dataframe: the dataframe contains all kernel's stats with the different C values
+    :return: kernel_params: the best params of the best kernel with the best C value
+    """
+    score_col = list(result_dataframe['score'])
+    best_c_index = score_col.index(max(score_col))
+    kernel_type = list(result_dataframe['kernel'])[best_c_index]
+    kernel_params = list(result_dataframe['kernel_params'])[best_c_index]
+    return kernel_type, kernel_params
+
+
+def get_test_set_performance(result_dataframe, train_data, train_labels, test_data, test_labels):
     """
     :param train_data: a numpy array with the features dataset - train
     :param train_labels: a numpy array with the labels - train
@@ -252,9 +277,7 @@ def get_test_set_performance(train_data, train_labels, test_data, test_labels):
              fpr: fpr on the test dataset
              accuracy: accuracy of the model on the test dataset
     """
-
-    kernel_type = 'rbf'
-    kernel_params = {'gamma': 0.5, 'C': 10}
+    kernel_type, kernel_params = get_best_kernel_and_c_params(result_dataframe)
     clf = SVC(kernel=kernel_type,
               gamma=kernel_params['gamma'],
               C=kernel_params['C'],
