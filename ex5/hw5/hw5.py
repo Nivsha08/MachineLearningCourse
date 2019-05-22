@@ -155,20 +155,20 @@ def compare_svms(data_array,
     return svm_df
 
 
-def get_most_accurate_kernel(result_dataframe):
+def get_most_accurate_kernel(accuracies_results):
     """
     :return: integer representing the row number of the most accurate kernel
     """
-    accuracies_col = list(result_dataframe['accuracy'])
+    accuracies_col = list(accuracies_results)
     best_accuracy = max(accuracies_col)
     return accuracies_col.index(best_accuracy)
 
 
-def get_kernel_with_highest_score(result_dataframe):
+def get_kernel_with_highest_score(scores_results):
     """
     :return: integer representing the row number of the kernel with the highest score
     """
-    scores_col = list(result_dataframe['score'])
+    scores_col = list(scores_results)
     best_score = max(scores_col)
     return scores_col.index(best_score)
 
@@ -191,7 +191,7 @@ def plot_roc_curve_with_score(df, alpha_slope=ALPHA):
     plt.scatter(x, y)
 
     # find the best kernel point
-    best_kernel_index = get_kernel_with_highest_score(df)
+    best_kernel_index = get_kernel_with_highest_score(df['score'])
     best_kernel_x = df.fpr.tolist()[best_kernel_index]
     best_kernel_y = df.tpr.tolist()[best_kernel_index]
 
@@ -215,7 +215,7 @@ def create_best_kernel_params(result_dataframe, i_options, j_options):
     :return: list of kernels and params
     """
     # get the best kernel parameters
-    best_kernel_index = get_kernel_with_highest_score(result_dataframe)
+    best_kernel_index = get_kernel_with_highest_score(result_dataframe['score'])
     best_kernel_type = result_dataframe.kernel.tolist()[best_kernel_index]
     best_kernel_params = result_dataframe.kernel_params.tolist()[best_kernel_index]
 
@@ -279,7 +279,8 @@ def get_test_set_performance(result_dataframe, train_data, train_labels, test_da
     """
     kernel_type, kernel_params = get_best_kernel_and_c_params(result_dataframe)
     clf = SVC(kernel=kernel_type,
-              gamma=kernel_params['gamma'],
+              degree=(kernel_params['degree'] if 'degree' in kernel_params else SVM_DEFAULT_DEGREE),
+              gamma=(kernel_params['gamma'] if 'gamma' in kernel_params else SVM_DEFAULT_GAMMA),
               C=kernel_params['C'],
               class_weight='balanced')
 
