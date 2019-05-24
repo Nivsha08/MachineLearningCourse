@@ -84,7 +84,6 @@ End
 \color #008000
 \end_index
 \topmargin 2cm
-\bottommargin 0cm
 \headsep 3cm
 \secnumdepth 3
 \tocdepth 3
@@ -967,7 +966,7 @@ Defining
 , we get
 \begin_inset Formula 
 \[
-K(x,y)=\phi(x)\cdot\phi(y)=1K_{1}+0K_{2}=\mathbf{K_{1}}
+K(x,y)=\phi(x)\cdot\phi(y)=1\cdot K_{1}+0K_{2}=K_{1}
 \]
 
 \end_inset
@@ -1048,7 +1047,7 @@ Defining
  we get:
 \begin_inset Formula 
 \[
-K(x,y)=\phi(x)\cdot\phi(y)=\mathbf{10K_{1}+8K_{2}}
+K(x,y)=\phi(x)\cdot\phi(y)=10K_{1}+8K_{2}
 \]
 
 \end_inset
@@ -1066,11 +1065,11 @@ Question 4
 \end_layout
 
 \begin_layout Standard
-Similarly to what we computed in a previous recitation, we can look at a
- general polynomial kernel function:
+Similarly to what we computed in a previous recitation, we can look at the
+ given kernel function:
 \begin_inset Formula 
 \[
-K(x,y)=(x\cdot y+c)^{d}
+K(x,y)=(x\cdot y+1)^{2}
 \]
 
 \end_inset
@@ -1084,10 +1083,10 @@ Since its a valid kernel function, it is an inner product.
 \begin_inset Formula $x,y\in\mathbb{R}^{n}$
 \end_inset
 
-, from using the multinormial formula we get:
+ we get:
 \begin_inset Formula 
 \[
-K(x,y)=\phi(x)\cdot\phi(y)=c^{2}+\sum_{i=1}^{n}\sqrt{2c}x_{i}y_{i}+\sum_{i=1}^{n}x_{i}^{2}y_{i}^{2}+\sum_{i=2}^{n}\sum_{j=1}^{n-1}2x_{i}x_{j}y_{i}y_{j}
+K(x,y)=\phi(x)\cdot\phi(y)=1+\sum_{i=1}^{n}2x_{i}y_{i}+\sum_{i=1}^{n}x_{i}^{2}y_{i}^{2}+\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}2x_{i}x_{j}y_{i}y_{j}
 \]
 
 \end_inset
@@ -1096,36 +1095,37 @@ K(x,y)=\phi(x)\cdot\phi(y)=c^{2}+\sum_{i=1}^{n}\sqrt{2c}x_{i}y_{i}+\sum_{i=1}^{n
 \begin_inset Newline newline
 \end_inset
 
-From the rational varieties of order 
-\begin_inset Formula $d$
+From the above we can see that 
+\begin_inset Formula $\phi(x)$
 \end_inset
 
- we can conclude that the higher dimension is 
-\begin_inset Formula ${n+d \choose d}$
+ is mapping 
+\begin_inset Formula $\mathbb{R}^{n}$
+\end_inset
+
+ to 
+\begin_inset Formula $\mathbb{R}^{4n-1}$
 \end_inset
 
 .
 \end_layout
 
 \begin_layout Standard
-In our specific case, with the lower dimension 
-\begin_inset Formula $n=20$
+In our specific case, with 
+\begin_inset Formula $n=20,000$
 \end_inset
 
- we can conclude that the higher dimension 
-\begin_inset Formula $m={20+2 \choose 2}=231$
-\end_inset
-
-.
-\begin_inset Newline newline
-\end_inset
-
-Meaning, 
+ we can conclude that 
 \begin_inset Formula $\phi(x)$
 \end_inset
 
  is mapping each vector to 
-\begin_inset Formula $\mathbb{R}^{m}$
+\begin_inset Formula $\mathbb{R}^{79,999}$
+\end_inset
+
+.
+ Denoting 
+\begin_inset Formula $d=79,999$
 \end_inset
 
 :
@@ -1135,7 +1135,7 @@ Meaning,
 
 \begin_inset Formula 
 \[
-\mathbf{\phi(x)=(x_{1}^{2}\ldots,x_{n}^{2},\thinspace\sqrt{2}x_{1}x_{2},\ldots,\sqrt{2}x_{i}x_{j},\ldots,\sqrt{2}x_{n-1}x_{n},\thinspace\sqrt{2}x_{1}\ldots,\sqrt{2}x_{n},1)\qquad\forall i\not=j\in[1,n]}
+\mathbf{\phi(x)=(1,\thinspace\sqrt{2}x_{1}\ldots,\sqrt{2}x_{d},x_{1}^{2}\ldots,x_{d}^{2},\thinspace\sqrt{2}x_{1}x_{2},\ldots,\sqrt{2}x_{i}x_{j},\ldots,\sqrt{2}x_{d-1}x_{d})\qquad\forall i\not=j\in[1,d]}
 \]
 
 \end_inset
