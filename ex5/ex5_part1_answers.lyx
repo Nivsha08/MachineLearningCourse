@@ -1066,6 +1066,25 @@ Question 4
 \end_layout
 
 \begin_layout Standard
+
+\series bold
+The script itself is on the next page, and in a separate Python file in
+ the submission folder:
+\begin_inset Formula 
+\[
+kernel\_vs\_phi.py
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Computing the mapping dimension:
+\end_layout
+
+\begin_layout Standard
 Similarly to what we computed in a previous recitation, we can look at a
  general polynomial kernel function:
 \begin_inset Formula 
@@ -1137,6 +1156,282 @@ Meaning,
 \[
 \mathbf{\phi(x)=(x_{1}^{2}\ldots,x_{n}^{2},\thinspace\sqrt{2}x_{1}x_{2},\ldots,\sqrt{2}x_{i}x_{j},\ldots,\sqrt{2}x_{n-1}x_{n},\thinspace\sqrt{2}x_{1}\ldots,\sqrt{2}x_{n},1)\qquad\forall i\not=j\in[1,n]}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can observe better performance when calculating the Gram-Matrix using
+ the kernel trick, in comparison to calculating the inner-product of each
+ two vectors 
+\begin_inset Formula $i,j$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+The calculation of the inner-product of two 
+\begin_inset Formula $20$
+\end_inset
+
+-dimension vectors is faster than the inner-product of two 
+\begin_inset Formula $231$
+\end_inset
+
+-dimension vectors - thus the Kernel trick is a significant improvement.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\begin_inset listings
+lstparams "basicstyle={\footnotesize\ttfamily},tabsize=6"
+inline false
+status open
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+import time
+\end_layout
+
+\begin_layout Plain Layout
+
+import sklearn.metrics.pairwise as sk_kernel 
+\end_layout
+
+\begin_layout Plain Layout
+
+import numpy as np from sklearn.preprocessing
+\end_layout
+
+\begin_layout Plain Layout
+
+import PolynomialFeatures
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+# draw 20,000 random vectors with 20 dimensions
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+num_of_vectors = 20000 
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+n = 20
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+vectors = np.random.rand(num_of_vectors, n)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+# calculating the gram matrix (M[i][j] = K(Xi, Xj)) 
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+start_time = time.time()
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+gram_matrix = np.square(np.matmul(vectors, vectors.T) + 1)
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+end_time = time.time()
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+# mapping the vectors from the lower dimension (20) to the higher dimension
+ (231)
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+phi = PolynomialFeatures(degree=2)
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+mapped_vectors = phi.fit_transform(vectors)
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+coef_list = [] 
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+i = 0 
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+while i <= n:      
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+	j = i     
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+	while j <= n:         
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+		if i == j:             
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+			coef_list.append(1)
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+        else: 
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+			coef_list.append(np.sqrt(2))
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+        j += 1
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+	i += 1 
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+coef_vector = np.array(coef_list)
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+mapped_vectors = np.multiply(mapped_vectors, coef_vector)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+# calculating the mapping matrix (M[i][j] = phi(x)phi(y)) 
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+start_time = time.time()
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+phi_matrix = np.matmul(mapped_vectors, mapped_vectors.T)
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+
+end_time = time.time() 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+# comparing the matrices 
+\end_layout
+
+\begin_layout Plain Layout
+\paragraph_spacing single
+\noindent
+
+np.allclose(gram_matrix, phi_matrix)
+\end_layout
 
 \end_inset
 
